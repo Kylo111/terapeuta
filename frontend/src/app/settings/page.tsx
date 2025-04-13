@@ -31,6 +31,21 @@ export default function SettingsPage() {
     fetchTherapyMethods();
   }, []);
 
+  // Funkcja do odświeżania danych
+  const refreshData = async () => {
+    setIsLoading(true);
+    try {
+      const methods = await getTherapyMethods();
+      setTherapyMethods(methods);
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania metod terapii');
+      console.error('Błąd pobierania metod terapii:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const categories = {
     'Metody terapii': {
       description: 'Zarządzaj promptami dla różnych metod terapii',
@@ -50,7 +65,7 @@ export default function SettingsPage() {
               <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1 mb-4">
                 {therapyMethods.map((method) => (
                   <Tab
-                    key={method.methodName}
+                    key={method._id}
                     className={({ selected }) =>
                       classNames(
                         'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
@@ -61,14 +76,14 @@ export default function SettingsPage() {
                       )
                     }
                   >
-                    {method.displayName}
+                    {method.name}
                   </Tab>
                 ))}
               </Tab.List>
               <Tab.Panels className="mt-2">
                 {therapyMethods.map((method) => (
                   <Tab.Panel
-                    key={method.methodName}
+                    key={method._id}
                     className={classNames(
                       'rounded-xl bg-white p-3',
                       'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
@@ -116,7 +131,7 @@ export default function SettingsPage() {
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-8">Ustawienia</h1>
-      
+
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-200 p-1 mb-8">
           {Object.keys(categories).map((category) => (

@@ -4,20 +4,21 @@ import React, { useState, useEffect } from 'react';
 import { getTherapyPrompts, TherapyMethod, TherapyPrompt } from '@/lib/api/therapyApi';
 import PromptEditor from './PromptEditor';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 
 interface TherapyMethodSettingsProps {
   method: TherapyMethod;
 }
 
 const TherapyMethodSettings: React.FC<TherapyMethodSettingsProps> = ({ method }) => {
-  const [prompts, setPrompts] = useState<Record<string, TherapyPrompt> | null>(null);
+  const [prompts, setPrompts] = useState<TherapyPrompt[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPrompts = async () => {
     try {
       setIsLoading(true);
-      const promptsData = await getTherapyPrompts(method.methodName);
+      const promptsData = await getTherapyPrompts(method._id);
       setPrompts(promptsData);
       setError(null);
     } catch (err) {
@@ -30,16 +31,49 @@ const TherapyMethodSettings: React.FC<TherapyMethodSettingsProps> = ({ method })
 
   useEffect(() => {
     fetchPrompts();
-  }, [method.methodName]);
+  }, [method._id]);
 
   return (
     <div>
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{method.displayName}</CardTitle>
+          <CardTitle>{method.name}</CardTitle>
           <CardDescription>{method.description}</CardDescription>
         </CardHeader>
+        <CardContent>
+          <div className="mb-4">
+            <h3 className="text-lg font-medium">Zasady:</h3>
+            <ul className="list-disc pl-5 mt-2">
+              {method.principles.map((principle, index) => (
+                <li key={index}>{principle}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="text-lg font-medium">Odpowiednie dla:</h3>
+            <ul className="list-disc pl-5 mt-2">
+              {method.suitableFor.map((suitable, index) => (
+                <li key={index}>{suitable}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="text-lg font-medium">Przeciwwskazania:</h3>
+            <ul className="list-disc pl-5 mt-2">
+              {method.contraindications.map((contraindication, index) => (
+                <li key={index}>{contraindication}</li>
+              ))}
+            </ul>
+          </div>
+        </CardContent>
       </Card>
+
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">Prompty</h3>
+        <Button variant="default" onClick={() => {}}>Dodaj nowy prompt</Button>
+      </div>
 
       {isLoading ? (
         <div className="text-center py-10">
@@ -50,20 +84,22 @@ const TherapyMethodSettings: React.FC<TherapyMethodSettingsProps> = ({ method })
         <div className="text-center py-10 text-red-500">
           <p>{error}</p>
         </div>
-      ) : prompts ? (
+      ) : prompts.length > 0 ? (
         <div>
-          <h3 className="text-xl font-semibold mb-4">Prompty</h3>
-          {Object.entries(prompts).map(([promptType, prompt]) => (
+          {prompts.map((prompt) => (
             <PromptEditor
-              key={promptType}
-              methodName={method.methodName}
-              promptType={promptType}
+              key={prompt._id}
               prompt={prompt}
               onUpdate={fetchPrompts}
             />
           ))}
         </div>
-      ) : null}
+      ) : (
+        <div className="text-center py-10 text-gray-500">
+          <p>Brak promptów dla tej metody terapeutycznej.</p>
+          <Button variant="outline" className="mt-4" onClick={() => {}}>Dodaj pierwszy prompt</Button>
+        </div>
+      )}
     </div>
   );
 };
