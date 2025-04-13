@@ -1,0 +1,32 @@
+{
+  "name": "terapeuta",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["therapy", "ai", "mental health", "llm"],
+  "author": "",
+  "license": "MIT",
+  "description": "Aplikacja terapeutyczna wykorzystująca modele sztucznej inteligencji do prowadzenia sesji terapeutycznych.",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.3"
+  }
+}

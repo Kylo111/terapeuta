@@ -1,0 +1,51 @@
+# Zależności
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Środowisko
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Katalogi budowania
+/build
+/dist
+
+# Logi
+logs
+*.log
+
+# Pliki systemu operacyjnego
+.DS_Store
+Thumbs.db
+
+# Pliki IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Pliki tymczasowe
+*.swp
+*.swo
+.tmp
+.temp
+
+# Pliki konfiguracyjne
+config.js
+config.json
+!example.config.js
+!example.config.json
+
+# Pliki bazy danych
+*.sqlite
+*.db
+
+# Pliki cache
+.cache/
+.npm/
+.eslintcache
