@@ -7,55 +7,47 @@ import { Button } from '@/components/ui/Button';
 import MainLayout from '@/components/layout/MainLayout';
 import ProfileCard from '@/components/profile/ProfileCard';
 import CreateProfileModal from '@/components/profile/CreateProfileModal';
-
-// Przykładowe dane profili
-const mockProfiles = [
-  {
-    _id: '1',
-    name: 'Jan Kowalski',
-    age: 35,
-    gender: 'male',
-    goals: ['Redukcja stresu', 'Poprawa relacji'],
-    challenges: ['Problemy z koncentracją', 'Konflikty w pracy'],
-    isActive: true,
-    createdAt: '2023-04-15T10:30:00Z'
-  },
-  {
-    _id: '2',
-    name: 'Anna Nowak',
-    age: 28,
-    gender: 'female',
-    goals: ['Radzenie sobie z lękiem', 'Budowanie pewności siebie'],
-    challenges: ['Ataki paniki', 'Trudności w podejmowaniu decyzji'],
-    isActive: true,
-    createdAt: '2023-05-20T14:45:00Z'
-  }
-];
+import { getProfiles, createProfile, Profile as ProfileType } from '@/lib/api/profilesApi';
+import { toast } from 'react-toastify';
 
 export default function ProfilePage() {
-  const [profiles, setProfiles] = useState(mockProfiles);
+  const [profiles, setProfiles] = useState<ProfileType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProfiles = async () => {
+    try {
+      setIsLoading(true);
+      const profilesData = await getProfiles();
+      setProfiles(profilesData);
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania profili');
+      console.error('Błąd pobierania profili:', err);
+      toast.error('Nie udało się pobrać profili');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Tutaj będzie pobieranie profili z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    fetchProfiles();
   }, []);
 
-  const handleCreateProfile = (newProfile) => {
-    // Tutaj będzie tworzenie profilu przez API
-    // Na razie dodajemy do lokalnego stanu
-    const profileWithId = {
-      ...newProfile,
-      _id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      isActive: true
-    };
-    setProfiles([...profiles, profileWithId]);
-    setIsCreateModalOpen(false);
+  const handleCreateProfile = async (newProfileData) => {
+    try {
+      setIsLoading(true);
+      const createdProfile = await createProfile(newProfileData);
+      setProfiles([...profiles, createdProfile]);
+      setIsCreateModalOpen(false);
+      toast.success('Profil został utworzony');
+    } catch (err) {
+      console.error('Błąd tworzenia profilu:', err);
+      toast.error('Nie udało się utworzyć profilu');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

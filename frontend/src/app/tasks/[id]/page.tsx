@@ -9,54 +9,48 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDate, formatDateTime } from '@/lib/utils';
-
-// Przykładowe dane zadania
-const mockTask = {
-  _id: '1',
-  profileId: '1',
-  profileName: 'Jan Kowalski',
-  sessionId: '101',
-  sessionDate: '2023-05-10T14:20:00Z',
-  title: 'Dziennik myśli',
-  description: 'Zapisuj swoje myśli i emocje przez 7 dni. Zwróć szczególną uwagę na sytuacje, które wywołują stres lub niepokój. Dla każdej sytuacji zapisz:\n1. Co się wydarzyło?\n2. Jakie myśli Ci towarzyszyły?\n3. Jakie emocje odczuwałeś/aś?\n4. Jak intensywne były te emocje (1-10)?\n5. Jakie zachowanie z tego wynikło?',
-  instructions: 'Wypełniaj dziennik codziennie wieczorem przez 7 dni. Postaraj się zapisać przynajmniej 2-3 sytuacje dziennie.',
-  dueDate: '2023-05-17T23:59:59Z',
-  status: 'completed',
-  createdAt: '2023-05-10T14:20:00Z',
-  completedAt: '2023-05-16T18:30:00Z',
-  feedback: 'Bardzo dobrze wykonane zadanie. Widać wyraźne wzorce w sytuacjach wywołujących stres, głównie związane z pracą i relacjami z szefem. Warto kontynuować pracę nad tymi obszarami.',
-  reflection: 'Zauważyłem, że większość sytuacji stresowych dotyczy mojej pracy, szczególnie gdy muszę rozmawiać z szefem o terminach. Myślę wtedy, że nie dam rady, że zawiodę i że szef będzie niezadowolony. Czuję wtedy silny niepokój (7-8/10) i często unikam tych rozmów lub zgadzam się na nierealne terminy.',
-  attachments: [
-    {
-      name: 'dziennik_mysli.pdf',
-      url: '/attachments/dziennik_mysli.pdf',
-      uploadedAt: '2023-05-16T18:25:00Z'
-    }
-  ]
-};
+import { getTask, updateTask, completeTask, Task as TaskType } from '@/lib/api/tasksApi';
+import { toast } from 'react-toastify';
 
 export default function TaskDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [task, setTask] = useState(null);
+  const [task, setTask] = useState<TaskType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState({
     status: '',
     reflection: ''
   });
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchTaskData = async () => {
+    try {
+      setIsLoading(true);
+      const taskId = params.id as string;
+
+      // Pobieranie danych zadania
+      const taskData = await getTask(taskId);
+      setTask(taskData);
+      setEditedTask({
+        status: taskData.status,
+        reflection: taskData.reflection || ''
+      });
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania danych zadania');
+      console.error('Błąd pobierania danych zadania:', err);
+      toast.error('Nie udało się pobrać danych zadania');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Tutaj będzie pobieranie danych zadania z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      setTask(mockTask);
-      setEditedTask({
-        status: mockTask.status,
-        reflection: mockTask.reflection || ''
-      });
-      setIsLoading(false);
-    }, 1000);
+    if (params.id) {
+      fetchTaskData();
+    }
   }, [params.id]);
 
   const handleEditTask = () => {
@@ -64,25 +58,42 @@ export default function TaskDetailPage() {
   };
 
   const handleCancelEdit = () => {
-    setEditedTask({
-      status: task.status,
-      reflection: task.reflection || ''
-    });
+    if (task) {
+      setEditedTask({
+        status: task.status,
+        reflection: task.reflection || ''
+      });
+    }
     setIsEditing(false);
   };
 
-  const handleSaveTask = () => {
-    // Tutaj będzie zapisywanie zmian w zadaniu przez API
-    // Na razie aktualizujemy lokalny stan
-    setTask({
-      ...task,
-      status: editedTask.status,
-      reflection: editedTask.reflection,
-      completedAt: editedTask.status === 'completed' && task.status !== 'completed'
-        ? new Date().toISOString()
-        : task.completedAt
-    });
-    setIsEditing(false);
+  const handleSaveTask = async () => {
+    try {
+      if (!task) return;
+
+      setIsLoading(true);
+
+      // Jeśli status zmienia się na 'completed', używamy completeTask
+      if (editedTask.status === 'completed' && task.status !== 'completed') {
+        const updatedTask = await completeTask(task._id, editedTask.reflection);
+        setTask(updatedTask);
+      } else {
+        // W przeciwnym razie używamy updateTask
+        const updatedTask = await updateTask(task._id, {
+          status: editedTask.status,
+          reflection: editedTask.reflection
+        });
+        setTask(updatedTask);
+      }
+
+      setIsEditing(false);
+      toast.success('Zadanie zostało zaktualizowane');
+    } catch (err) {
+      console.error('Błąd aktualizacji zadania:', err);
+      toast.error('Nie udało się zaktualizować zadania');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -199,14 +210,14 @@ export default function TaskDetailPage() {
                     <h3 className="text-sm font-medium text-gray-500">Opis</h3>
                     <p className="mt-1 whitespace-pre-wrap">{task.description}</p>
                   </div>
-                  
+
                   {task.instructions && (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Instrukcje</h3>
                       <p className="mt-1 whitespace-pre-wrap">{task.instructions}</p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div>
                       <Select
@@ -235,7 +246,7 @@ export default function TaskDetailPage() {
                       )}
                     </div>
                   )}
-                  
+
                   {task.attachments && task.attachments.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Załączniki</h3>

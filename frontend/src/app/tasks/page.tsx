@@ -8,111 +8,97 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDate } from '@/lib/utils';
-
-// Przykładowe dane zadań
-const mockTasks = [
-  {
-    _id: '1',
-    profileId: '1',
-    profileName: 'Jan Kowalski',
-    sessionId: '101',
-    title: 'Dziennik myśli',
-    description: 'Zapisuj swoje myśli i emocje przez 7 dni.',
-    dueDate: '2023-05-17T23:59:59Z',
-    status: 'completed',
-    createdAt: '2023-05-10T14:20:00Z'
-  },
-  {
-    _id: '2',
-    profileId: '1',
-    profileName: 'Jan Kowalski',
-    sessionId: '101',
-    title: 'Ćwiczenie relaksacyjne',
-    description: 'Wykonuj ćwiczenie oddechowe 2 razy dziennie przez 5 minut.',
-    dueDate: '2023-05-20T23:59:59Z',
-    status: 'in_progress',
-    createdAt: '2023-05-10T14:20:00Z'
-  },
-  {
-    _id: '3',
-    profileId: '2',
-    profileName: 'Anna Nowak',
-    sessionId: '103',
-    title: 'Analiza przekonań',
-    description: 'Zidentyfikuj i zapisz 5 przekonań, które mogą wpływać na Twój stres.',
-    dueDate: '2023-05-15T23:59:59Z',
-    status: 'completed',
-    createdAt: '2023-04-25T16:00:00Z'
-  },
-  {
-    _id: '4',
-    profileId: '2',
-    profileName: 'Anna Nowak',
-    sessionId: '104',
-    title: 'Technika ekspozycji',
-    description: 'Wykonaj ćwiczenie ekspozycji na sytuacje wywołujące lęk według instrukcji.',
-    dueDate: '2023-05-22T23:59:59Z',
-    status: 'not_started',
-    createdAt: '2023-05-12T11:30:00Z'
-  }
-];
-
-// Przykładowe dane profili
-const mockProfiles = [
-  { _id: '1', name: 'Jan Kowalski' },
-  { _id: '2', name: 'Anna Nowak' }
-];
+import { getTasks, Task as TaskType } from '@/lib/api/tasksApi';
+import { getProfiles, Profile as ProfileType } from '@/lib/api/profilesApi';
+import { toast } from 'react-toastify';
 
 export default function TasksPage() {
   const searchParams = useSearchParams();
   const profileIdParam = searchParams.get('profileId');
-  
-  const [tasks, setTasks] = useState([]);
-  const [profiles, setProfiles] = useState(mockProfiles);
-  const [selectedProfileId, setSelectedProfileId] = useState(profileIdParam || '');
-  const [selectedStatus, setSelectedStatus] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const statusParam = searchParams.get('status');
 
-  useEffect(() => {
-    // Tutaj będzie pobieranie zadań z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      let filteredTasks = [...mockTasks];
-      
+  const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [profiles, setProfiles] = useState<ProfileType[]>([]);
+  const [selectedProfileId, setSelectedProfileId] = useState(profileIdParam || '');
+  const [selectedStatus, setSelectedStatus] = useState(statusParam || '');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+
+      // Pobieranie profili
+      const profilesData = await getProfiles();
+      setProfiles(profilesData);
+
+      // Pobieranie zadań z filtrowaniem
+      const filters: { profileId?: string; status?: string } = {};
+
       if (profileIdParam) {
-        filteredTasks = filteredTasks.filter(task => task.profileId === profileIdParam);
+        filters.profileId = profileIdParam;
         setSelectedProfileId(profileIdParam);
       }
-      
-      setTasks(filteredTasks);
-      setIsLoading(false);
-    }, 1000);
-  }, [profileIdParam]);
 
-  const handleProfileChange = (e) => {
+      if (statusParam) {
+        filters.status = statusParam;
+        setSelectedStatus(statusParam);
+      }
+
+      const tasksData = await getTasks(Object.keys(filters).length > 0 ? filters : undefined);
+      setTasks(tasksData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania danych');
+      console.error('Błąd pobierania danych:', err);
+      toast.error('Nie udało się pobrać danych');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [profileIdParam, statusParam]);
+
+  const handleProfileChange = async (e) => {
     const profileId = e.target.value;
     setSelectedProfileId(profileId);
-    filterTasks(profileId, selectedStatus);
+    await filterTasks(profileId, selectedStatus);
   };
 
-  const handleStatusChange = (e) => {
+  const handleStatusChange = async (e) => {
     const status = e.target.value;
     setSelectedStatus(status);
-    filterTasks(selectedProfileId, status);
+    await filterTasks(selectedProfileId, status);
   };
 
-  const filterTasks = (profileId, status) => {
-    let filteredTasks = [...mockTasks];
-    
-    if (profileId) {
-      filteredTasks = filteredTasks.filter(task => task.profileId === profileId);
+  const filterTasks = async (profileId, status) => {
+    try {
+      setIsLoading(true);
+
+      const filters: { profileId?: string; status?: string } = {};
+
+      if (profileId) {
+        filters.profileId = profileId;
+      }
+
+      if (status) {
+        filters.status = status;
+      }
+
+      const tasksData = await getTasks(Object.keys(filters).length > 0 ? filters : undefined);
+      setTasks(tasksData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania zadań');
+      console.error('Błąd pobierania zadań:', err);
+      toast.error('Nie udało się pobrać zadań');
+    } finally {
+      setIsLoading(false);
     }
-    
-    if (status) {
-      filteredTasks = filteredTasks.filter(task => task.status === status);
-    }
-    
-    setTasks(filteredTasks);
   };
 
   const getTaskStatusLabel = (status) => {
@@ -174,7 +160,7 @@ export default function TasksPage() {
                   }))
                 ]}
               />
-              
+
               <Select
                 label="Status"
                 value={selectedStatus}

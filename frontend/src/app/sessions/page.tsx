@@ -8,89 +8,69 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDate, formatDateTime } from '@/lib/utils';
-
-// Przykładowe dane sesji
-const mockSessions = [
-  {
-    _id: '1',
-    profileId: '1',
-    profileName: 'Jan Kowalski',
-    date: '2023-05-10T14:20:00Z',
-    therapyMethod: 'cbt',
-    duration: 45,
-    status: 'completed',
-    summary: 'Omówienie technik radzenia sobie ze stresem w pracy.'
-  },
-  {
-    _id: '2',
-    profileId: '1',
-    profileName: 'Jan Kowalski',
-    date: '2023-04-25T16:00:00Z',
-    therapyMethod: 'humanistic',
-    duration: 50,
-    status: 'completed',
-    summary: 'Eksploracja wartości i celów życiowych.'
-  },
-  {
-    _id: '3',
-    profileId: '2',
-    profileName: 'Anna Nowak',
-    date: '2023-05-12T11:30:00Z',
-    therapyMethod: 'psychodynamic',
-    duration: 60,
-    status: 'completed',
-    summary: 'Analiza wzorców zachowań i ich źródeł.'
-  },
-  {
-    _id: '4',
-    profileId: '2',
-    profileName: 'Anna Nowak',
-    date: '2023-05-05T09:15:00Z',
-    therapyMethod: 'solution_focused',
-    duration: 40,
-    status: 'completed',
-    summary: 'Identyfikacja zasobów i mocnych stron.'
-  }
-];
-
-// Przykładowe dane profili
-const mockProfiles = [
-  { _id: '1', name: 'Jan Kowalski' },
-  { _id: '2', name: 'Anna Nowak' }
-];
+import { getSessions, Session as SessionType } from '@/lib/api/sessionsApi';
+import { getProfiles, Profile as ProfileType } from '@/lib/api/profilesApi';
+import { toast } from 'react-toastify';
 
 export default function SessionsPage() {
   const searchParams = useSearchParams();
   const profileIdParam = searchParams.get('profileId');
-  
-  const [sessions, setSessions] = useState([]);
-  const [profiles, setProfiles] = useState(mockProfiles);
+
+  const [sessions, setSessions] = useState<SessionType[]>([]);
+  const [profiles, setProfiles] = useState<ProfileType[]>([]);
   const [selectedProfileId, setSelectedProfileId] = useState(profileIdParam || '');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+
+      // Pobieranie profili
+      const profilesData = await getProfiles();
+      setProfiles(profilesData);
+
+      // Pobieranie sesji z filtrowaniem po profilu, jeśli podano
+      const sessionsData = await getSessions(
+        profileIdParam ? { profileId: profileIdParam } : undefined
+      );
+      setSessions(sessionsData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania danych');
+      console.error('Błąd pobierania danych:', err);
+      toast.error('Nie udało się pobrać danych');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Tutaj będzie pobieranie sesji z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      const filteredSessions = profileIdParam
-        ? mockSessions.filter(session => session.profileId === profileIdParam)
-        : mockSessions;
-      
-      setSessions(filteredSessions);
-      setIsLoading(false);
-    }, 1000);
+    fetchData();
   }, [profileIdParam]);
 
-  const handleProfileChange = (e) => {
+  const handleProfileChange = async (e) => {
     const profileId = e.target.value;
     setSelectedProfileId(profileId);
-    
-    // Filtrowanie sesji po profilu
-    const filteredSessions = profileId
-      ? mockSessions.filter(session => session.profileId === profileId)
-      : mockSessions;
-    
-    setSessions(filteredSessions);
+
+    try {
+      setIsLoading(true);
+
+      // Pobieranie sesji z filtrowaniem po profilu
+      const sessionsData = await getSessions(
+        profileId ? { profileId } : undefined
+      );
+      setSessions(sessionsData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania sesji');
+      console.error('Błąd pobierania sesji:', err);
+      toast.error('Nie udało się pobrać sesji');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getTherapyMethodLabel = (method) => {

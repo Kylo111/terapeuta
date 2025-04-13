@@ -55,9 +55,9 @@
 31. Implementacja stron profili (lista profili, szczegóły profilu, tworzenie profilu)
 32. Implementacja stron sesji (lista sesji, szczegóły sesji, nowa sesja)
 33. Implementacja stron zadań (lista zadań, szczegóły zadania)
+34. Integracja frontendu z backendem (API dla profili, sesji, zadań, użytkowników, LLM)
 
 ## Następne kroki
 
-1. Integracja frontendu z backendem
-2. Testowanie aplikacji
-3. Wdrożenie aplikacji
+1. Testowanie aplikacji
+2. Wdrożenie aplikacji

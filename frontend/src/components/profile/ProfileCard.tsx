@@ -5,18 +5,10 @@ import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { formatDate } from '@/lib/utils';
+import { Profile } from '@/lib/api/profilesApi';
 
 interface ProfileProps {
-  profile: {
-    _id: string;
-    name: string;
-    age: number;
-    gender: string;
-    goals: string[];
-    challenges: string[];
-    isActive: boolean;
-    createdAt: string;
-  };
+  profile: Profile;
 }
 
 const ProfileCard: React.FC<ProfileProps> = ({ profile }) => {

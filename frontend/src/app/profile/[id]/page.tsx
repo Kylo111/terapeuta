@@ -10,94 +10,52 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDate } from '@/lib/utils';
-
-// Przykładowe dane profilu
-const mockProfile = {
-  _id: '1',
-  name: 'Jan Kowalski',
-  age: 35,
-  gender: 'male',
-  goals: ['Redukcja stresu', 'Poprawa relacji'],
-  challenges: ['Problemy z koncentracją', 'Konflikty w pracy'],
-  preferredTherapyMethods: ['cbt', 'humanistic'],
-  notes: 'Pacjent zgłasza problemy ze snem i koncentracją. Preferuje terapię poznawczo-behawioralną.',
-  isActive: true,
-  createdAt: '2023-04-15T10:30:00Z',
-  lastSessionAt: '2023-05-10T14:20:00Z',
-  sessionsCount: 3,
-  tasksCount: 5,
-  completedTasksCount: 3
-};
-
-// Przykładowe dane sesji
-const mockSessions = [
-  {
-    _id: '101',
-    date: '2023-05-10T14:20:00Z',
-    therapyMethod: 'cbt',
-    duration: 45,
-    summary: 'Omówienie technik radzenia sobie ze stresem w pracy.'
-  },
-  {
-    _id: '102',
-    date: '2023-04-25T16:00:00Z',
-    therapyMethod: 'humanistic',
-    duration: 50,
-    summary: 'Eksploracja wartości i celów życiowych.'
-  },
-  {
-    _id: '103',
-    date: '2023-04-15T10:30:00Z',
-    therapyMethod: 'cbt',
-    duration: 60,
-    summary: 'Pierwsza sesja - zebranie wywiadu i ustalenie celów terapii.'
-  }
-];
-
-// Przykładowe dane zadań
-const mockTasks = [
-  {
-    _id: '201',
-    title: 'Dziennik myśli',
-    description: 'Zapisuj swoje myśli i emocje przez 7 dni.',
-    dueDate: '2023-05-17T23:59:59Z',
-    status: 'completed',
-    createdAt: '2023-05-10T14:20:00Z'
-  },
-  {
-    _id: '202',
-    title: 'Ćwiczenie relaksacyjne',
-    description: 'Wykonuj ćwiczenie oddechowe 2 razy dziennie przez 5 minut.',
-    dueDate: '2023-05-20T23:59:59Z',
-    status: 'in_progress',
-    createdAt: '2023-05-10T14:20:00Z'
-  },
-  {
-    _id: '203',
-    title: 'Analiza przekonań',
-    description: 'Zidentyfikuj i zapisz 5 przekonań, które mogą wpływać na Twój stres.',
-    dueDate: '2023-05-15T23:59:59Z',
-    status: 'completed',
-    createdAt: '2023-04-25T16:00:00Z'
-  }
-];
+import { getProfile, updateProfile, getProfileSessions, getProfileTasks, Profile as ProfileType } from '@/lib/api/profilesApi';
+import { toast } from 'react-toastify';
 
 export default function ProfileDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [profile, setProfile] = useState(mockProfile);
-  const [sessions, setSessions] = useState(mockSessions);
-  const [tasks, setTasks] = useState(mockTasks);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [sessions, setSessions] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedProfile, setEditedProfile] = useState(mockProfile);
+  const [editedProfile, setEditedProfile] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProfileData = async () => {
+    try {
+      setIsLoading(true);
+      const profileId = params.id as string;
+
+      // Pobieranie danych profilu
+      const profileData = await getProfile(profileId);
+      setProfile(profileData);
+      setEditedProfile(profileData);
+
+      // Pobieranie sesji profilu
+      const sessionsData = await getProfileSessions(profileId);
+      setSessions(sessionsData);
+
+      // Pobieranie zadań profilu
+      const tasksData = await getProfileTasks(profileId);
+      setTasks(tasksData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania danych profilu');
+      console.error('Błąd pobierania danych profilu:', err);
+      toast.error('Nie udało się pobrać danych profilu');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Tutaj będzie pobieranie danych profilu, sesji i zadań z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    if (params.id) {
+      fetchProfileData();
+    }
   }, [params.id]);
 
   const handleEditProfile = () => {
@@ -109,11 +67,30 @@ export default function ProfileDetailPage() {
     setIsEditing(false);
   };
 
-  const handleSaveProfile = () => {
-    // Tutaj będzie zapisywanie zmian w profilu przez API
-    // Na razie aktualizujemy lokalny stan
-    setProfile(editedProfile);
-    setIsEditing(false);
+  const handleSaveProfile = async () => {
+    try {
+      if (!profile || !editedProfile) return;
+
+      setIsLoading(true);
+      const updatedProfile = await updateProfile(profile._id, {
+        name: editedProfile.name,
+        age: editedProfile.age,
+        gender: editedProfile.gender,
+        goals: editedProfile.goals,
+        challenges: editedProfile.challenges,
+        notes: editedProfile.notes,
+        preferredTherapyMethods: editedProfile.preferredTherapyMethods
+      });
+
+      setProfile(updatedProfile);
+      setIsEditing(false);
+      toast.success('Profil został zaktualizowany');
+    } catch (err) {
+      console.error('Błąd aktualizacji profilu:', err);
+      toast.error('Nie udało się zaktualizować profilu');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -225,7 +202,7 @@ export default function ProfileDetailPage() {
                       value={editedProfile.name}
                       onChange={handleInputChange}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <Input
                         label="Wiek"
@@ -234,7 +211,7 @@ export default function ProfileDetailPage() {
                         value={editedProfile.age}
                         onChange={handleInputChange}
                       />
-                      
+
                       <Select
                         label="Płeć"
                         name="gender"
@@ -247,19 +224,19 @@ export default function ProfileDetailPage() {
                         ]}
                       />
                     </div>
-                    
+
                     <Textarea
                       label="Cele terapeutyczne (każdy cel w nowej linii)"
                       value={editedProfile.goals.join('\n')}
                       onChange={handleGoalsChange}
                     />
-                    
+
                     <Textarea
                       label="Wyzwania (każde wyzwanie w nowej linii)"
                       value={editedProfile.challenges.join('\n')}
                       onChange={handleChallengesChange}
                     />
-                    
+
                     <Textarea
                       label="Notatki"
                       name="notes"
@@ -279,7 +256,7 @@ export default function ProfileDetailPage() {
                         <p>{profile.gender === 'male' ? 'Mężczyzna' : profile.gender === 'female' ? 'Kobieta' : 'Inna'}</p>
                       </div>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Cele terapeutyczne</h3>
                       <ul className="mt-1 list-disc list-inside">
@@ -288,7 +265,7 @@ export default function ProfileDetailPage() {
                         ))}
                       </ul>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Wyzwania</h3>
                       <ul className="mt-1 list-disc list-inside">
@@ -297,7 +274,7 @@ export default function ProfileDetailPage() {
                         ))}
                       </ul>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Preferowane metody terapii</h3>
                       <ul className="mt-1 list-disc list-inside">
@@ -306,12 +283,12 @@ export default function ProfileDetailPage() {
                         ))}
                       </ul>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Notatki</h3>
                       <p className="mt-1 whitespace-pre-wrap">{profile.notes}</p>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                       <div>
                         <h3 className="text-sm font-medium text-gray-500">Data utworzenia</h3>
@@ -403,8 +380,8 @@ export default function ProfileDetailPage() {
                         <div className="flex justify-between items-start">
                           <p className="font-medium">{task.title}</p>
                           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                            task.status === 'completed' ? 'bg-green-100 text-green-800' : 
-                            task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' : 
+                            task.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                             'bg-gray-100 text-gray-800'
                           }`}>
                             {getTaskStatusLabel(task.status)}

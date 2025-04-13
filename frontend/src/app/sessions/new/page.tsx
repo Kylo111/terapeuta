@@ -9,44 +9,52 @@ import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import MainLayout from '@/components/layout/MainLayout';
-
-// Przykładowe dane profili
-const mockProfiles = [
-  { _id: '1', name: 'Jan Kowalski' },
-  { _id: '2', name: 'Anna Nowak' }
-];
-
-// Przykładowe dane metod terapii
-const mockTherapyMethods = [
-  { value: 'cbt', label: 'Terapia poznawczo-behawioralna' },
-  { value: 'psychodynamic', label: 'Terapia psychodynamiczna' },
-  { value: 'humanistic', label: 'Terapia humanistyczna' },
-  { value: 'systemic', label: 'Terapia systemowa' },
-  { value: 'solution_focused', label: 'Terapia skoncentrowana na rozwiązaniach' }
-];
+import { getProfiles, Profile as ProfileType } from '@/lib/api/profilesApi';
+import { createSession, CreateSessionData } from '@/lib/api/sessionsApi';
+import { getTherapyMethods, TherapyMethod } from '@/lib/api/therapyApi';
+import { toast } from 'react-toastify';
 
 export default function NewSessionPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const profileIdParam = searchParams.get('profileId');
-  
-  const [profiles, setProfiles] = useState([]);
+
+  const [profiles, setProfiles] = useState<ProfileType[]>([]);
+  const [therapyMethods, setTherapyMethods] = useState<TherapyMethod[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
-  const [sessionData, setSessionData] = useState({
+  const [error, setError] = useState<string | null>(null);
+  const [sessionData, setSessionData] = useState<CreateSessionData>({
     profileId: profileIdParam || '',
     therapyMethod: '',
     initialMessage: '',
     mood: 5
   });
 
-  useEffect(() => {
-    // Tutaj będzie pobieranie profili z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      setProfiles(mockProfiles);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+
+      // Pobieranie profili
+      const profilesData = await getProfiles();
+      setProfiles(profilesData);
+
+      // Pobieranie metod terapii
+      const methodsData = await getTherapyMethods();
+      setTherapyMethods(methodsData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania danych');
+      console.error('Błąd pobierania danych:', err);
+      toast.error('Nie udało się pobrać danych');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleInputChange = (e) => {
@@ -59,16 +67,17 @@ export default function NewSessionPage() {
 
   const handleStartSession = async () => {
     setIsStarting(true);
-    
+
     try {
-      // Tutaj będzie tworzenie nowej sesji przez API
-      // Na razie symulujemy opóźnienie i przekierowujemy do fikcyjnej sesji
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // Tworzenie nowej sesji przez API
+      const newSession = await createSession(sessionData);
+
       // Przekierowanie do nowej sesji
-      router.push('/sessions/new-session-id');
+      toast.success('Sesja została utworzona');
+      router.push(`/sessions/${newSession._id}`);
     } catch (error) {
       console.error('Błąd podczas tworzenia sesji:', error);
+      toast.error('Nie udało się utworzyć sesji');
       setIsStarting(false);
     }
   };
@@ -118,7 +127,7 @@ export default function NewSessionPage() {
                     }))
                   ]}
                 />
-                
+
                 <Select
                   label="Metoda terapii"
                   name="therapyMethod"
@@ -126,10 +135,13 @@ export default function NewSessionPage() {
                   onChange={handleInputChange}
                   options={[
                     { value: '', label: 'Wybierz metodę terapii' },
-                    ...mockTherapyMethods
+                    ...therapyMethods.map(method => ({
+                      value: method.methodName,
+                      label: method.displayName
+                    }))
                   ]}
                 />
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Jak się dzisiaj czujesz? (1-10)
@@ -151,7 +163,7 @@ export default function NewSessionPage() {
                     <span className="text-sm font-medium">{sessionData.mood}</span>
                   </div>
                 </div>
-                
+
                 <Textarea
                   label="Wiadomość początkowa (opcjonalnie)"
                   name="initialMessage"

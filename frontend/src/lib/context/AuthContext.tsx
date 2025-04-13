@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { login as apiLogin, logout as apiLogout, isAuthenticated, AuthResponse } from '@/lib/api/authApi';
+import { getCurrentUser } from '@/lib/api/usersApi';
 
 interface AuthContextType {
   user: AuthResponse['user'] | null;
@@ -24,19 +25,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         if (isAuthenticated()) {
           // Pobieranie danych użytkownika
-          const response = await fetch('/api/users/me');
-          const data = await response.json();
-          
-          if (data.success) {
-            setUser(data.data.user);
-          } else {
-            // Jeśli nie udało się pobrać danych użytkownika, wylogowanie
-            await apiLogout();
-            router.push('/auth/login');
-          }
+          const userData = await getCurrentUser();
+          setUser(userData);
         }
       } catch (error) {
         console.error('Błąd sprawdzania autentykacji:', error);
+        // Jeśli nie udało się pobrać danych użytkownika, wylogowanie
+        await apiLogout();
+        router.push('/auth/login');
       } finally {
         setIsLoading(false);
       }

@@ -7,87 +7,50 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/Button';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDateTime } from '@/lib/utils';
-
-// Przykładowe dane sesji
-const mockSession = {
-  _id: '1',
-  profileId: '1',
-  profileName: 'Jan Kowalski',
-  date: '2023-05-10T14:20:00Z',
-  therapyMethod: 'cbt',
-  duration: 45,
-  status: 'completed',
-  summary: 'Omówienie technik radzenia sobie ze stresem w pracy.',
-  notes: 'Pacjent zgłasza poprawę w radzeniu sobie ze stresem. Nadal występują trudności w sytuacjach konfliktowych w pracy. Zalecono kontynuację ćwiczeń relaksacyjnych i wprowadzenie technik asertywnej komunikacji.',
-  mood: {
-    before: 4,
-    after: 6
-  },
-  topics: [
-    'Stres w pracy',
-    'Techniki relaksacyjne',
-    'Asertywna komunikacja'
-  ],
-  techniques: [
-    'Restrukturyzacja poznawcza',
-    'Trening relaksacyjny',
-    'Modelowanie zachowań'
-  ],
-  tasks: [
-    {
-      _id: '201',
-      title: 'Dziennik myśli',
-      description: 'Zapisuj swoje myśli i emocje przez 7 dni.',
-      dueDate: '2023-05-17T23:59:59Z',
-      status: 'completed'
-    },
-    {
-      _id: '202',
-      title: 'Ćwiczenie relaksacyjne',
-      description: 'Wykonuj ćwiczenie oddechowe 2 razy dziennie przez 5 minut.',
-      dueDate: '2023-05-20T23:59:59Z',
-      status: 'in_progress'
-    }
-  ],
-  transcript: [
-    {
-      role: 'system',
-      content: 'Rozpoczynamy sesję terapii poznawczo-behawioralnej.'
-    },
-    {
-      role: 'assistant',
-      content: 'Dzień dobry, Jan. Jak się dzisiaj czujesz?'
-    },
-    {
-      role: 'user',
-      content: 'Dzień dobry. Czuję się trochę lepiej niż ostatnio, ale nadal mam problemy ze stresem w pracy.'
-    },
-    {
-      role: 'assistant',
-      content: 'Cieszę się, że jest pewna poprawa. Możesz powiedzieć więcej o tych sytuacjach w pracy, które wywołują stres?'
-    },
-    {
-      role: 'user',
-      content: 'Głównie są to sytuacje, gdy muszę rozmawiać z trudnymi klientami lub gdy mój szef stawia nierealistyczne terminy.'
-    },
-    // Więcej wiadomości...
-  ]
-};
+import { getSession, getSessionTranscript, getSessionTasks, Session as SessionType } from '@/lib/api/sessionsApi';
+import { toast } from 'react-toastify';
 
 export default function SessionDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<SessionType | null>(null);
+  const [transcript, setTranscript] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('summary');
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSessionData = async () => {
+    try {
+      setIsLoading(true);
+      const sessionId = params.id as string;
+
+      // Pobieranie danych sesji
+      const sessionData = await getSession(sessionId);
+      setSession(sessionData);
+
+      // Pobieranie transkrypcji sesji
+      const transcriptData = await getSessionTranscript(sessionId);
+      setTranscript(transcriptData);
+
+      // Pobieranie zadań sesji
+      const tasksData = await getSessionTasks(sessionId);
+      setTasks(tasksData);
+
+      setError(null);
+    } catch (err) {
+      setError('Błąd pobierania danych sesji');
+      console.error('Błąd pobierania danych sesji:', err);
+      toast.error('Nie udało się pobrać danych sesji');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Tutaj będzie pobieranie danych sesji z API
-    // Na razie używamy przykładowych danych
-    setTimeout(() => {
-      setSession(mockSession);
-      setIsLoading(false);
-    }, 1000);
+    if (params.id) {
+      fetchSessionData();
+    }
   }, [params.id]);
 
   const getTherapyMethodLabel = (method) => {
@@ -241,12 +204,12 @@ export default function SessionDetailPage() {
                     <h3 className="text-lg font-medium text-gray-900">Podsumowanie</h3>
                     <p className="mt-2 text-gray-600">{session.summary}</p>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Notatki</h3>
                     <p className="mt-2 text-gray-600 whitespace-pre-wrap">{session.notes}</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">Nastrój</h3>
@@ -261,7 +224,7 @@ export default function SessionDetailPage() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">Tematy</h3>
                       <div className="mt-2 flex flex-wrap gap-2">
@@ -273,7 +236,7 @@ export default function SessionDetailPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Techniki</h3>
                     <div className="mt-2 flex flex-wrap gap-2">
