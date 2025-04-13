@@ -10,7 +10,7 @@
 
 ### 1.2. Przygotowanie architektury
 - [x] Szczegółowe projektowanie architektury aplikacji
-- [x] Projektowanie schematu bazy danych (utworzone modele: User, Profile, Session, Task)
+- [x] Projektowanie schematu bazy danych (utworzone modele: User, Profile, Session, Task, TherapyMethod, Prompt)
 - [x] Projektowanie API
 - [x] Projektowanie struktury stanu aplikacji
 
@@ -30,9 +30,9 @@
 6. Utworzenie plików konfiguracyjnych (.gitignore, .env.example, .eslintrc.json, .prettierrc)
 7. Utworzenie README.md z opisem projektu
 8. Utworzenie podstawowego pliku index.js
-9. Utworzenie modeli danych (User, Profile, Session, Task)
+9. Utworzenie modeli danych (User, Profile, Session, Task, TherapyMethod, Prompt)
 10. Utworzenie modułów zarządzania przechowywaniem danych (SessionStorage, ProfileStorage)
-11. Utworzenie modułów integracji z API modeli LLM (OpenAI, Anthropic)
+11. Utworzenie modułów integracji z API modeli LLM (OpenAI, Anthropic, Google, HuggingFace)
 12. Utworzenie modułu zarządzania API (APIManager)
 13. Utworzenie modułów silnika terapii (StateMachine, ContextManager, SessionHandler)
 14. Utworzenie modułu terapii poznawczo-behawioralnej (CognitiveBehavioralTherapy)
@@ -53,12 +53,22 @@
 29. Implementacja strony głównej, logowania, rejestracji i dashboardu
 30. Implementacja zakładki ustawień z edytorem promptów
 31. Implementacja stron profili (lista profili, szczegóły profilu, tworzenie profilu)
-32. Implementacja stron sesji (lista sesji, szczegóły sesji, nowa sesja)
+32. Implementacja stron sesji (lista sesji, szczegóły sesji, nowa sesja, czat sesji)
 33. Implementacja stron zadań (lista zadań, szczegóły zadania)
 34. Integracja frontendu z backendem (API dla profili, sesji, zadań, użytkowników, LLM)
-35. Testowanie aplikacji (testy jednostkowe, integracyjne)
-36. Wdrożenie aplikacji (konfiguracja Render, Vercel, Sentry, Umami)
+35. Implementacja kontrolerów i tras API (auth, health, llm, prompt, session, therapy-method)
+36. Implementacja serwisu LLM do integracji z modelami językowymi
+37. Implementacja generowania odpowiedzi asystenta dla sesji terapeutycznych
+38. Testowanie aplikacji (testy jednostkowe, integracyjne)
+39. Wdrożenie aplikacji (konfiguracja Render, Vercel, Sentry, Umami)
 
 ## Następne kroki
 
-Wszystkie zaplanowane zadania zostały zrealizowane.
+1. Implementacja systemu powiadomień - informowanie użytkowników o nowych sesjach, zadaniach i przypomnieniach
+2. Implementacja systemu raportowania - generowanie raportów z sesji terapeutycznych, analiza postępów terapii
+3. Implementacja systemu eksportu/importu danych - eksportowanie i importowanie danych sesji terapeutycznych
+4. Rozbudowa systemu zarządzania profilami - tworzenie, aktualizacja i usuwanie profili pacjentów
+5. Rozbudowa systemu zarządzania zadaniami - zarządzanie zadaniami przypisanymi podczas sesji terapeutycznych
+6. Implementacja zaawansowanych funkcji - system diagnozowania i rekomendacji, integracja z urządzeniami fitness
+7. Implementacja zaawansowanego monitorowania postępu - wizualizacja postępu, analiza sentymentu
+8. Implementacja systemu bezpieczeństwa - wykrywanie sygnałów zagrożenia, protokół bezpieczeństwa

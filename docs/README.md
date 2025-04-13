@@ -13,6 +13,7 @@ Ten katalog zawiera dokumentację techniczną aplikacji "Terapeuta", w tym dokum
 ### Baza danych
 
 - [Schemat bazy danych](database_schema.md) - Opis schematu bazy danych, w tym kolekcje, relacje, strategie zapytań, indeksowania, migracji i backupu.
+- [Modele danych](data-models.md) - Szczegółowy opis modeli danych używanych w aplikacji, w tym User, Profile, Session, Task, TherapyMethod i Prompt.
 
 ### API
 
@@ -59,3 +60,25 @@ Przykłady są ważną częścią dokumentacji i powinny być:
 ### Aktualizacje
 
 Dokumentacja powinna być aktualizowana wraz z rozwojem aplikacji. Każda znacząca zmiana w kodzie powinna być odzwierciedlona w odpowiedniej dokumentacji.
+
+## Status projektu
+
+Obecny status projektu można znaleźć w pliku [progress.md](../progress.md) w głównym katalogu projektu. Zawiera on listę zrealizowanych zadań oraz plan dalszych prac.
+
+### Zaimplementowane funkcjonalności
+
+- Uwierzytelnianie użytkowników
+- Zarządzanie metodami terapeutycznymi
+- Zarządzanie promptami
+- Zarządzanie sesjami terapeutycznymi
+- Integracja z modelami językowymi (OpenAI, Anthropic, Google, HuggingFace)
+- Generowanie odpowiedzi asystenta dla sesji terapeutycznych
+
+### Planowane funkcjonalności
+
+- System powiadomień
+- System raportowania
+- System eksportu/importu danych
+- Rozbudowa systemu zarządzania profilami
+- Rozbudowa systemu zarządzania zadaniami
+- Zaawansowane funkcje (diagnozowanie, rekomendacje, integracja z urządzeniami fitness)

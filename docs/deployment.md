@@ -42,6 +42,8 @@ Aplikacja Terapeuta składa się z dwóch głównych komponentów:
    - `JWT_REFRESH_SECRET`: [wygenerowany sekretny klucz]
    - `OPENAI_API_KEY`: [klucz API OpenAI]
    - `ANTHROPIC_API_KEY`: [klucz API Anthropic]
+   - `GOOGLE_API_KEY`: [klucz API Google]
+   - `HUGGINGFACE_API_KEY`: [klucz API HuggingFace]
    - `FRONTEND_URL`: https://terapeuta.vercel.app
    - `SENTRY_DSN`: [klucz DSN Sentry]
 
@@ -87,6 +89,7 @@ Aplikacja Terapeuta składa się z dwóch głównych komponentów:
    - `tasks`
    - `devices`
    - `therapymethods`
+   - `prompts`
 
 ### 5.3. Połączenie
 1. Uzyskaj URI połączenia z MongoDB Atlas

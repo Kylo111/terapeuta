@@ -3,40 +3,40 @@
 ## 1. Faza Przygotowawcza (2 tygodnie)
 
 ### 1.1. Konfiguracja środowiska deweloperskiego
-- [ ] Utworzenie repozytorium Git na GitHub
-- [ ] Konfiguracja środowiska deweloperskiego (VS Code, ESLint, Prettier)
-- [ ] Utworzenie struktury projektu
-- [ ] Konfiguracja CI/CD z GitHub Actions
+- [x] Utworzenie repozytorium Git na GitHub
+- [x] Konfiguracja środowiska deweloperskiego (VS Code, ESLint, Prettier)
+- [x] Utworzenie struktury projektu
+- [x] Konfiguracja CI/CD z GitHub Actions
 
 ### 1.2. Przygotowanie architektury
-- [ ] Szczegółowe projektowanie architektury aplikacji
-- [ ] Projektowanie schematu bazy danych
-- [ ] Projektowanie API
-- [ ] Projektowanie struktury stanu aplikacji
+- [x] Szczegółowe projektowanie architektury aplikacji
+- [x] Projektowanie schematu bazy danych
+- [x] Projektowanie API
+- [x] Projektowanie struktury stanu aplikacji
 
 ### 1.3. Przygotowanie dokumentacji technicznej
-- [ ] Dokumentacja API
-- [ ] Dokumentacja struktury bazy danych
-- [ ] Dokumentacja architektury systemu
-- [ ] Przygotowanie szablonów dokumentacji kodu
+- [x] Dokumentacja API
+- [x] Dokumentacja struktury bazy danych
+- [x] Dokumentacja architektury systemu
+- [x] Przygotowanie szablonów dokumentacji kodu
 
 ## 2. Faza 1: Podstawowa Funkcjonalność (6 tygodni)
 
 ### 2.1. Implementacja backendu (2 tygodnie)
-- [ ] Konfiguracja serwera Node.js z Express
-- [ ] Implementacja podstawowych endpointów API
-- [ ] Konfiguracja MongoDB Atlas
-- [ ] Implementacja modeli danych
-- [ ] Implementacja systemu autentykacji z Supabase Auth
-- [ ] Implementacja podstawowego systemu przechowywania sesji
+- [x] Konfiguracja serwera Node.js z Express
+- [x] Implementacja podstawowych endpointów API
+- [x] Konfiguracja MongoDB Atlas
+- [x] Implementacja modeli danych
+- [x] Implementacja systemu autentykacji z JWT
+- [x] Implementacja podstawowego systemu przechowywania sesji
 
 ### 2.2. Implementacja frontendu webowego (2 tygodnie)
-- [ ] Inicjalizacja projektu Next.js
-- [ ] Konfiguracja Tailwind CSS i Chakra UI
-- [ ] Implementacja podstawowych komponentów UI
-- [ ] Implementacja systemu routingu
-- [ ] Implementacja formularzy rejestracji i logowania
-- [ ] Implementacja podstawowego interfejsu sesji terapeutycznej
+- [x] Inicjalizacja projektu Next.js
+- [x] Konfiguracja Tailwind CSS
+- [x] Implementacja podstawowych komponentów UI
+- [x] Implementacja systemu routingu
+- [x] Implementacja formularzy rejestracji i logowania
+- [x] Implementacja podstawowego interfejsu sesji terapeutycznej
 
 ### 2.3. Implementacja aplikacji mobilnej (2 tygodnie)
 - [ ] Inicjalizacja projektu React Native
@@ -46,35 +46,39 @@
 - [ ] Implementacja formularzy rejestracji i logowania
 - [ ] Implementacja podstawowego interfejsu sesji terapeutycznej
 
+> Uwaga: Implementacja aplikacji mobilnej została odłożona na późniejszy etap projektu. Priorytetem jest rozwinięcie aplikacji webowej.
+
 ### 2.4. Integracja z modelami LLM (2 tygodnie)
-- [ ] Konfiguracja Ollama dla lokalnych modeli
-- [ ] Implementacja integracji z Hugging Face
-- [ ] Implementacja integracji z Google Gemini
-- [ ] Implementacja systemu zarządzania kluczami API
-- [ ] Implementacja podstawowego systemu promptów
+- [x] Konfiguracja dla lokalnych modeli
+- [x] Implementacja integracji z Hugging Face
+- [x] Implementacja integracji z Google Gemini
+- [x] Implementacja integracji z OpenAI
+- [x] Implementacja integracji z Anthropic
+- [x] Implementacja systemu zarządzania kluczami API
+- [x] Implementacja podstawowego systemu promptów
 
 ## 3. Faza 2: Rozszerzenie Funkcjonalności (8 tygodni)
 
 ### 3.1. Implementacja maszyny stanów terapii (2 tygodnie)
-- [ ] Implementacja LangGraph dla zarządzania przepływem terapii
-- [ ] Implementacja stanów terapii (inicjalizacja, sprawdzenie nastroju, agenda, itd.)
-- [ ] Implementacja przejść między stanami
-- [ ] Implementacja systemu zarządzania kontekstem sesji
-- [ ] Testowanie przepływu terapii
+- [x] Implementacja zarządzania przepływem terapii
+- [x] Implementacja stanów terapii (inicjalizacja, sprawdzenie nastroju, agenda, itd.)
+- [x] Implementacja przejść między stanami
+- [x] Implementacja systemu zarządzania kontekstem sesji
+- [x] Testowanie przepływu terapii
 
 ### 3.2. Implementacja metod terapii (3 tygodnie)
-- [ ] Implementacja terapii poznawczo-behawioralnej (CBT)
-- [ ] Implementacja terapii psychodynamicznej
-- [ ] Implementacja terapii humanistyczno-egzystencjalnej
-- [ ] Implementacja terapii systemowej
-- [ ] Implementacja terapii krótkoterminowej skoncentrowanej na rozwiązaniach
+- [x] Implementacja terapii poznawczo-behawioralnej (CBT)
+- [x] Implementacja terapii psychodynamicznej
+- [x] Implementacja terapii humanistyczno-egzystencjalnej
+- [x] Implementacja terapii systemowej
+- [x] Implementacja terapii krótkoterminowej skoncentrowanej na rozwiązaniach
 
 ### 3.3. Implementacja systemu zarządzania zadaniami (2 tygodnie)
-- [ ] Implementacja modelu danych dla zadań terapeutycznych
+- [x] Implementacja modelu danych dla zadań terapeutycznych
 - [ ] Implementacja systemu przypomnień
-- [ ] Implementacja interfejsu zarządzania zadaniami
+- [x] Implementacja podstawowego interfejsu zarządzania zadaniami
 - [ ] Implementacja systemu raportowania wykonania zadań
-- [ ] Implementacja integracji zadań z sesjami terapeutycznymi
+- [x] Implementacja integracji zadań z sesjami terapeutycznymi
 
 ### 3.4. Implementacja warsztatu asertywności (1 tydzień)
 - [ ] Implementacja modułu diagnostyki poziomu asertywności
