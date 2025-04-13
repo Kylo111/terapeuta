@@ -6,6 +6,7 @@
 const express = require('express');
 const router = express.Router();
 const promptController = require('../controllers/prompt.controller');
+const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
 
 /**
  * @route GET /api/prompts
@@ -26,41 +27,41 @@ router.get('/:id', promptController.getPromptById);
  * @desc Tworzy nowy prompt
  * @access Private (Admin)
  */
-router.post('/', promptController.createPrompt);
+router.post('/', verifyToken, verifyAdmin, promptController.createPrompt);
 
 /**
  * @route PUT /api/prompts/:id
  * @desc Aktualizuje prompt
  * @access Private (Admin)
  */
-router.put('/:id', promptController.updatePrompt);
+router.put('/:id', verifyToken, verifyAdmin, promptController.updatePrompt);
 
 /**
  * @route DELETE /api/prompts/:id
  * @desc Usuwa prompt
  * @access Private (Admin)
  */
-router.delete('/:id', promptController.deletePrompt);
+router.delete('/:id', verifyToken, verifyAdmin, promptController.deletePrompt);
 
 /**
  * @route POST /api/prompts/:id/effectiveness
  * @desc Dodaje ocenę skuteczności promptu
  * @access Private
  */
-router.post('/:id/effectiveness', promptController.addEffectivenessRating);
+router.post('/:id/effectiveness', verifyToken, promptController.addEffectivenessRating);
 
 /**
  * @route POST /api/prompts/:id/feedback
  * @desc Dodaje opinię użytkownika o promptcie
  * @access Private
  */
-router.post('/:id/feedback', promptController.addFeedback);
+router.post('/:id/feedback', verifyToken, promptController.addFeedback);
 
 /**
  * @route POST /api/prompts/:id/render
  * @desc Renderuje prompt z podstawionymi zmiennymi
  * @access Private
  */
-router.post('/:id/render', promptController.renderPrompt);
+router.post('/:id/render', verifyToken, promptController.renderPrompt);
 
 module.exports = router;

@@ -49,29 +49,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Importowanie tras API
+const healthRoutes = require('./app/routes/health.routes');
+const therapyMethodRoutes = require('./app/routes/therapy-method.routes');
+const promptRoutes = require('./app/routes/prompt.routes');
+const authRoutes = require('./app/routes/auth.routes');
 // Tymczasowo wyłączamy importy, które mogą powodować problemy
-// const authApi = require('./app/api/auth_api').router;
 // const usersApi = require('./app/api/users_api');
 // const profilesApi = require('./app/api/profiles_api');
 // const sessionsApi = require('./app/api/sessions_api');
 // const tasksApi = require('./app/api/tasks_api');
 // const llmApi = require('./app/api/llm_api');
 // const therapyApi = require('./app/api/therapy_api');
-const healthRoutes = require('./app/routes/health.routes');
-const therapyMethodRoutes = require('./app/routes/therapy-method.routes');
-const promptRoutes = require('./app/routes/prompt.routes');
 
 // Rejestracja tras API
-// app.use('/api/auth', authApi);
+app.use('/api/health', healthRoutes);
+app.use('/api/therapy-methods', therapyMethodRoutes);
+app.use('/api/prompts', promptRoutes);
+app.use('/api/auth', authRoutes);
 // app.use('/api/users', usersApi);
 // app.use('/api/profiles', profilesApi);
 // app.use('/api', sessionsApi);
 // app.use('/api', tasksApi);
 // app.use('/api/llm', llmApi);
 // app.use('/api/therapy', therapyApi);
-app.use('/api/health', healthRoutes);
-app.use('/api/therapy-methods', therapyMethodRoutes);
-app.use('/api/prompts', promptRoutes);
 
 // Podstawowa trasa
 app.get('/', (req, res) => {

@@ -32,6 +32,28 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'
   }],
+  devices: [{
+    deviceId: {
+      type: String,
+      required: true
+    },
+    deviceName: {
+      type: String,
+      default: 'Nieznane urządzenie'
+    },
+    refreshToken: {
+      type: String,
+      required: true
+    },
+    lastActive: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
   settings: {
     preferredLLMProvider: {
       type: String,
@@ -82,7 +104,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next) {
   // Tylko jeśli hasło zostało zmodyfikowane
   if (!this.isModified('password')) return next();
-  
+
   try {
     // Generowanie salt
     const salt = await bcrypt.genSalt(10);
@@ -101,7 +123,29 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 
 // Metoda do generowania tokenu JWT
 userSchema.methods.generateAuthToken = function() {
-  // Implementacja zostanie dodana po dodaniu JWT
+  const jwt = require('jsonwebtoken');
+
+  const accessToken = jwt.sign(
+    { userId: this._id },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' }
+  );
+
+  return accessToken;
+};
+
+// Metoda do pobierania publicznego profilu użytkownika
+userSchema.methods.getPublicProfile = function() {
+  return {
+    id: this._id,
+    email: this.email,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    profiles: this.profiles,
+    settings: this.settings,
+    createdAt: this.createdAt,
+    lastLogin: this.lastLogin
+  };
 };
 
 const User = mongoose.model('User', userSchema);
