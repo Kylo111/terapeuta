@@ -50,7 +50,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Importowanie tras API
 // Tymczasowo wyłączamy importy, które mogą powodować problemy
-// const therapyMethodsApi = require('./app/api/therapy_methods_api');
 // const authApi = require('./app/api/auth_api').router;
 // const usersApi = require('./app/api/users_api');
 // const profilesApi = require('./app/api/profiles_api');
@@ -59,9 +58,10 @@ app.use(express.urlencoded({ extended: true }));
 // const llmApi = require('./app/api/llm_api');
 // const therapyApi = require('./app/api/therapy_api');
 const healthRoutes = require('./app/routes/health.routes');
+const therapyMethodRoutes = require('./app/routes/therapy-method.routes');
+const promptRoutes = require('./app/routes/prompt.routes');
 
 // Rejestracja tras API
-// app.use('/api/therapy-methods', therapyMethodsApi);
 // app.use('/api/auth', authApi);
 // app.use('/api/users', usersApi);
 // app.use('/api/profiles', profilesApi);
@@ -70,6 +70,8 @@ const healthRoutes = require('./app/routes/health.routes');
 // app.use('/api/llm', llmApi);
 // app.use('/api/therapy', therapyApi);
 app.use('/api/health', healthRoutes);
+app.use('/api/therapy-methods', therapyMethodRoutes);
+app.use('/api/prompts', promptRoutes);
 
 // Podstawowa trasa
 app.get('/', (req, res) => {
