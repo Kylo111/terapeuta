@@ -46,9 +46,9 @@
 22. Implementacja pozostałych metod terapii (psychodynamiczna, humanistyczna, systemowa, skoncentrowana na rozwiązaniach)
 23. Implementacja modułu zarządzania metodami terapii
 24. Implementacja API do podglądu i modyfikacji promptów metod terapii
+25. Implementacja API dla frontendu (autentykacja, użytkownicy, profile, sesje, zadania, LLM, terapia)
 
 ## Następne kroki
 
-1. Implementacja API dla frontendu
-2. Inicjalizacja projektu frontendowego (Next.js)
-3. Implementacja podstawowych komponentów UI
+1. Inicjalizacja projektu frontendowego (Next.js)
+2. Implementacja podstawowych komponentów UI

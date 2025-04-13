@@ -16,9 +16,23 @@ app.use(express.urlencoded({ extended: true }));
 
 // Importowanie tras API
 const therapyMethodsApi = require('./app/api/therapy_methods_api');
+const authApi = require('./app/api/auth_api').router;
+const usersApi = require('./app/api/users_api');
+const profilesApi = require('./app/api/profiles_api');
+const sessionsApi = require('./app/api/sessions_api');
+const tasksApi = require('./app/api/tasks_api');
+const llmApi = require('./app/api/llm_api');
+const therapyApi = require('./app/api/therapy_api');
 
 // Rejestracja tras API
 app.use('/api/therapy-methods', therapyMethodsApi);
+app.use('/api/auth', authApi);
+app.use('/api/users', usersApi);
+app.use('/api/profiles', profilesApi);
+app.use('/api', sessionsApi);
+app.use('/api', tasksApi);
+app.use('/api/llm', llmApi);
+app.use('/api/therapy', therapyApi);
 
 // Podstawowa trasa
 app.get('/', (req, res) => {
