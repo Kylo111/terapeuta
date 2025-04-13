@@ -47,8 +47,15 @@
 23. Implementacja modułu zarządzania metodami terapii
 24. Implementacja API do podglądu i modyfikacji promptów metod terapii
 25. Implementacja API dla frontendu (autentykacja, użytkownicy, profile, sesje, zadania, LLM, terapia)
+26. Inicjalizacja projektu frontendowego (Next.js)
+27. Implementacja podstawowych komponentów UI (Button, Input, Textarea, Select, Card)
+28. Implementacja układu aplikacji (MainLayout, AuthLayout)
+29. Implementacja strony głównej, logowania, rejestracji i dashboardu
+30. Implementacja zakładki ustawień z edytorem promptów
 
 ## Następne kroki
 
-1. Inicjalizacja projektu frontendowego (Next.js)
-2. Implementacja podstawowych komponentów UI
+1. Implementacja pozostałych stron aplikacji (profile, sesje, zadania)
+2. Integracja frontendu z backendem
+3. Testowanie aplikacji
+4. Wdrożenie aplikacji
