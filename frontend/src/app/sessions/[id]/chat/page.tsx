@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/Input';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDateTime } from '@/lib/utils';
 import { getSession, addMessage, endSession, addTask, Session as SessionType, SessionMessage } from '@/lib/api/sessionsApi';
+import { generateTherapyResponse } from '@/lib/api/llmApi';
 import { toast } from 'react-toastify';
 
 export default function SessionChatPage() {
@@ -32,7 +33,7 @@ export default function SessionChatPage() {
       // Pobieranie danych sesji
       const sessionData = await getSession(sessionId);
       setSession(sessionData);
-      
+
       // Ustawienie wiadomości z konwersacji sesji
       if (sessionData.conversation) {
         setMessages(sessionData.conversation);
@@ -90,21 +91,31 @@ export default function SessionChatPage() {
       setMessages(prev => [...prev, userMessage]);
       setNewMessage('');
 
-      // Symulacja odpowiedzi asystenta (w rzeczywistości będzie to odpowiedź z API)
-      setTimeout(async () => {
-        try {
-          const assistantMessage = await addMessage(sessionId, { 
-            role: 'assistant', 
-            content: 'To jest przykładowa odpowiedź asystenta. W rzeczywistości będzie to odpowiedź z API.' 
-          });
-          setMessages(prev => [...prev, assistantMessage]);
-        } catch (error) {
-          console.error('Błąd podczas dodawania odpowiedzi asystenta:', error);
-          toast.error('Nie udało się dodać odpowiedzi asystenta');
-        } finally {
-          setIsSending(false);
-        }
-      }, 1000);
+      // Generowanie odpowiedzi asystenta za pomocą API LLM
+      try {
+        // Pobranie aktualnej sesji, aby uzyskać metodę terapeutyczną
+        const currentSession = await getSession(sessionId);
+
+        // Generowanie odpowiedzi asystenta
+        const llmResponse = await generateTherapyResponse(
+          sessionId,
+          messages.concat(userMessage),
+          currentSession.therapyMethod
+        );
+
+        // Dodanie odpowiedzi asystenta do sesji
+        const assistantMessage = await addMessage(sessionId, {
+          role: 'assistant',
+          content: llmResponse.message.content
+        });
+
+        setMessages(prev => [...prev, assistantMessage]);
+      } catch (error) {
+        console.error('Błąd podczas generowania odpowiedzi asystenta:', error);
+        toast.error('Nie udało się wygenerować odpowiedzi asystenta');
+      } finally {
+        setIsSending(false);
+      }
     } catch (error) {
       console.error('Błąd podczas wysyłania wiadomości:', error);
       toast.error('Nie udało się wysłać wiadomości');

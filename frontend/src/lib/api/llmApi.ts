@@ -45,11 +45,11 @@ export interface LLMCompletionResponse {
  */
 export const getLLMProviders = async (): Promise<LLMProvider[]> => {
   const response = await api.get('/llm/providers');
-  
+
   if (response.data.success) {
     return response.data.data.providers;
   }
-  
+
   throw new Error(response.data.error?.message || 'Błąd pobierania dostawców LLM');
 };
 
@@ -58,11 +58,11 @@ export const getLLMProviders = async (): Promise<LLMProvider[]> => {
  */
 export const getLLMModels = async (providerId: string): Promise<LLMModel[]> => {
   const response = await api.get(`/llm/providers/${providerId}/models`);
-  
+
   if (response.data.success) {
     return response.data.data.models;
   }
-  
+
   throw new Error(response.data.error?.message || 'Błąd pobierania modeli LLM');
 };
 
@@ -71,11 +71,11 @@ export const getLLMModels = async (providerId: string): Promise<LLMModel[]> => {
  */
 export const generateLLMCompletion = async (request: LLMCompletionRequest): Promise<LLMCompletionResponse> => {
   const response = await api.post('/llm/completions', request);
-  
+
   if (response.data.success) {
     return response.data.data;
   }
-  
+
   throw new Error(response.data.error?.message || 'Błąd generowania odpowiedzi LLM');
 };
 
@@ -98,7 +98,7 @@ export const generateLLMCompletionStream = async (
         }
       },
     });
-    
+
     if (response.data.success) {
       onComplete(response.data.data);
     } else {
@@ -114,11 +114,11 @@ export const generateLLMCompletionStream = async (
  */
 export const getLLMUsageHistory = async (): Promise<any> => {
   const response = await api.get('/llm/usage');
-  
+
   if (response.data.success) {
     return response.data.data.usage;
   }
-  
+
   throw new Error(response.data.error?.message || 'Błąd pobierania historii użycia LLM');
 };
 
@@ -127,10 +127,27 @@ export const getLLMUsageHistory = async (): Promise<any> => {
  */
 export const getLLMUsageLimits = async (): Promise<any> => {
   const response = await api.get('/llm/usage/limits');
-  
+
   if (response.data.success) {
     return response.data.data.limits;
   }
-  
+
   throw new Error(response.data.error?.message || 'Błąd pobierania limitów użycia LLM');
+};
+
+/**
+ * Generowanie odpowiedzi asystenta dla sesji terapeutycznej
+ */
+export const generateTherapyResponse = async (sessionId: string, messages: LLMMessage[], therapyMethod: string): Promise<LLMCompletionResponse> => {
+  const response = await api.post('/llm/therapy-response', {
+    sessionId,
+    messages,
+    therapyMethod
+  });
+
+  if (response.data.success) {
+    return response.data.data;
+  }
+
+  throw new Error(response.data.error?.message || 'Błąd generowania odpowiedzi terapeutycznej');
 };
