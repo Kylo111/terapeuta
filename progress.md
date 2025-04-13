@@ -57,7 +57,8 @@
 33. Implementacja stron zadań (lista zadań, szczegóły zadania)
 34. Integracja frontendu z backendem (API dla profili, sesji, zadań, użytkowników, LLM)
 35. Testowanie aplikacji (testy jednostkowe, integracyjne)
+36. Wdrożenie aplikacji (konfiguracja Render, Vercel, Sentry, Umami)
 
 ## Następne kroki
 
-1. Wdrożenie aplikacji
+Wszystkie zaplanowane zadania zostały zrealizowane.

@@ -3,18 +3,19 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  HomeIcon, 
-  UserIcon, 
-  ChatBubbleLeftRightIcon, 
-  ClipboardDocumentListIcon, 
-  Cog6ToothIcon, 
+import {
+  HomeIcon,
+  UserIcon,
+  ChatBubbleLeftRightIcon,
+  ClipboardDocumentListIcon,
+  Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/lib/context/AuthContext';
 import { cn } from '@/lib/utils';
+import UmamiAnalytics from '@/components/analytics/UmamiAnalytics';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -43,6 +44,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Umami Analytics */}
+      <UmamiAnalytics
+        websiteId={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''}
+        umamiUrl={process.env.NEXT_PUBLIC_UMAMI_URL || ''}
+      />
       {/* Mobile menu button */}
       <div className="fixed top-0 left-0 z-40 p-4 md:hidden">
         <button

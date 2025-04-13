@@ -2,14 +2,27 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const Sentry = require('@sentry/node');
 
 // Załadowanie zmiennych środowiskowych
 dotenv.config();
+
+// Inicjalizacja Sentry
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV || 'development',
+    tracesSampleRate: 1.0,
+  });
+  console.log('Sentry zainicjalizowany');
+}
 
 // Inicjalizacja aplikacji Express
 const app = express();
 
 // Middleware
+// Sentry request handler musi być pierwszym middleware
+app.use(Sentry.Handlers.requestHandler());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +36,7 @@ const sessionsApi = require('./app/api/sessions_api');
 const tasksApi = require('./app/api/tasks_api');
 const llmApi = require('./app/api/llm_api');
 const therapyApi = require('./app/api/therapy_api');
+const healthRoutes = require('./app/routes/health.routes');
 
 // Rejestracja tras API
 app.use('/api/therapy-methods', therapyMethodsApi);
@@ -33,6 +47,7 @@ app.use('/api', sessionsApi);
 app.use('/api', tasksApi);
 app.use('/api/llm', llmApi);
 app.use('/api/therapy', therapyApi);
+app.use('/api/health', healthRoutes);
 
 // Podstawowa trasa
 app.get('/', (req, res) => {
@@ -43,12 +58,16 @@ app.get('/', (req, res) => {
   });
 });
 
+// Sentry error handler musi być przed innymi middleware obsługującymi błędy
+app.use(Sentry.Handlers.errorHandler());
+
 // Obsługa błędów
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
     message: 'Wystąpił błąd serwera',
-    error: process.env.NODE_ENV === 'development' ? err.message : 'Internal Server Error'
+    error: process.env.NODE_ENV === 'development' ? err.message : 'Internal Server Error',
+    eventId: res.sentry
   });
 });
 
@@ -72,13 +91,16 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   console.log(`Serwer uruchomiony na porcie ${PORT}`);
   // Połącz z bazą danych
-  // await connectDB();
+  await connectDB();
   console.log(`Środowisko: ${process.env.NODE_ENV || 'development'}`);
 });
 
 // Obsługa zamknięcia aplikacji
 process.on('SIGINT', async () => {
-  // await mongoose.connection.close();
+  await mongoose.connection.close();
   console.log('Połączenie z bazą danych zamknięte');
   process.exit(0);
 });
+
+// Eksport aplikacji dla testów
+module.exports = app;
