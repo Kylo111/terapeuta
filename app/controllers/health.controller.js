@@ -14,15 +14,15 @@ exports.checkHealth = async (req, res) => {
   try {
     // Sprawdzenie połączenia z bazą danych
     const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-    
+
     // Sprawdzenie dostępności kluczy API
     const openaiApiKey = process.env.OPENAI_API_KEY ? 'available' : 'unavailable';
     const anthropicApiKey = process.env.ANTHROPIC_API_KEY ? 'available' : 'unavailable';
-    
+
     // Informacje o środowisku
     const environment = process.env.NODE_ENV || 'development';
     const uptime = process.uptime();
-    
+
     res.status(200).json({
       success: true,
       data: {
