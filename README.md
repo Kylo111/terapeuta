@@ -29,7 +29,7 @@ Aplikacja "Terapeuta" to kompleksowe rozwiązanie terapeutyczne dostępne na urz
 
 1. Sklonuj repozytorium:
    ```
-   git clone https://github.com/username/terapeuta.git
+   git clone https://github.com/terapeuta-app/terapeuta.git
    cd terapeuta
    ```
 
