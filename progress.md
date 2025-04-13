@@ -52,10 +52,12 @@
 28. Implementacja układu aplikacji (MainLayout, AuthLayout)
 29. Implementacja strony głównej, logowania, rejestracji i dashboardu
 30. Implementacja zakładki ustawień z edytorem promptów
+31. Implementacja stron profili (lista profili, szczegóły profilu, tworzenie profilu)
+32. Implementacja stron sesji (lista sesji, szczegóły sesji, nowa sesja)
+33. Implementacja stron zadań (lista zadań, szczegóły zadania)
 
 ## Następne kroki
 
-1. Implementacja pozostałych stron aplikacji (profile, sesje, zadania)
-2. Integracja frontendu z backendem
-3. Testowanie aplikacji
-4. Wdrożenie aplikacji
+1. Integracja frontendu z backendem
+2. Testowanie aplikacji
+3. Wdrożenie aplikacji
