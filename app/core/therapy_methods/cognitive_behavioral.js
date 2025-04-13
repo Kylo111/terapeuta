@@ -1,6 +1,6 @@
 /**
  * Moduł terapii poznawczo-behawioralnej (CBT)
- * 
+ *
  * Ten moduł implementuje metody i techniki terapii poznawczo-behawioralnej.
  */
 
@@ -12,6 +12,18 @@ class CognitiveBehavioralTherapy {
     this.methodName = 'cognitive_behavioral';
     this.displayName = 'Terapia Poznawczo-Behawioralna (CBT)';
     this.description = 'Metoda terapii skupiająca się na identyfikacji i zmianie negatywnych wzorców myślenia oraz zachowań.';
+
+    // Domyślne prompty, które mogą być modyfikowane przez użytkownika
+    this.prompts = {
+      systemPrompt: this.generateSystemPrompt({}),
+      initializePrompt: this.generateInitializePrompt({}),
+      moodCheckPrompt: this.generateMoodCheckPrompt({}),
+      setAgendaPrompt: this.generateSetAgendaPrompt({}),
+      mainTherapyPrompt: this.generateMainTherapyPrompt({}),
+      summarizePrompt: this.generateSummarizePrompt({}),
+      feedbackPrompt: this.generateFeedbackPrompt({}),
+      endPrompt: this.generateEndPrompt({})
+    };
   }
 
   /**
@@ -20,8 +32,8 @@ class CognitiveBehavioralTherapy {
    * @returns {string} - Prompt systemowy
    */
   generateSystemPrompt(context) {
-    return `Jesteś terapeutą prowadzącym sesję terapii poznawczo-behawioralnej (CBT). 
-    
+    return `Jesteś terapeutą prowadzącym sesję terapii poznawczo-behawioralnej (CBT).
+
 Twoje podejście opiera się na następujących zasadach:
 1. Terapia CBT koncentruje się na teraźniejszości i jest zorientowana na rozwiązania.
 2. Pomagasz klientowi identyfikować, kwestionować i zmieniać negatywne lub zniekształcone wzorce myślenia.
@@ -94,7 +106,7 @@ Prowadź sesję w empatyczny, wspierający sposób, jednocześnie pomagając kli
    */
   generateMoodCheckPrompt(context) {
     return `Zapytaj klienta o jego obecny nastrój i samopoczucie. Możesz poprosić o ocenę w skali 1-10 dla różnych aspektów (np. lęk, nastrój, energia). Jeśli to nie pierwsza sesja, porównaj z poprzednimi pomiarami i zapytaj o zmiany.
-    
+
 Możesz zadać pytania takie jak:
 - "Jak się dziś czujesz?"
 - "Jak oceniłbyś/oceniłabyś swój poziom lęku/nastroju/energii w skali 1-10?"
@@ -109,7 +121,7 @@ Możesz zadać pytania takie jak:
    */
   generateSetAgendaPrompt(context) {
     return `Ustal z klientem agendę dzisiejszej sesji. W terapii CBT ważne jest, aby sesja miała jasną strukturę i cele.
-    
+
 Możesz zapytać:
 - "Czym chciałbyś/chciałabyś się zająć podczas dzisiejszej sesji?"
 - "Jakie tematy są dla Ciebie najważniejsze do omówienia dzisiaj?"
@@ -127,7 +139,7 @@ Na podstawie odpowiedzi klienta, zaproponuj plan sesji, uwzględniając prioryte
    */
   generateMainTherapyPrompt(context) {
     return `Prowadź główną część terapeutyczną, stosując techniki terapii poznawczo-behawioralnej odpowiednie do zgłaszanych przez klienta problemów.
-    
+
 Możesz wykorzystać następujące techniki CBT:
 
 1. Identyfikacja zniekształceń poznawczych:
@@ -162,7 +174,7 @@ Pamiętaj o stosowaniu pytań sokratejskich, które pomogą klientowi samodzieln
    */
   generateSummarizePrompt(context) {
     return `Podsumuj główne tematy i odkrycia z dzisiejszej sesji. W terapii CBT ważne jest, aby klient wyniósł z sesji konkretne wnioski i narzędzia.
-    
+
 W podsumowaniu uwzględnij:
 1. Główne tematy omawiane podczas sesji
 2. Zidentyfikowane wzorce myślenia i zachowania
@@ -179,7 +191,7 @@ Zapytaj klienta, czy podsumowanie jest zgodne z jego odczuciami i czy chciałby 
    */
   generateFeedbackPrompt(context) {
     return `Poproś klienta o informację zwrotną na temat dzisiejszej sesji. W terapii CBT ważna jest współpraca i dostosowywanie procesu do potrzeb klienta.
-    
+
 Możesz zapytać:
 - "Co było dla Ciebie najbardziej pomocne w dzisiejszej sesji?"
 - "Czy jest coś, co moglibyśmy zrobić inaczej w przyszłości?"
@@ -196,7 +208,7 @@ Wysłuchaj uważnie odpowiedzi klienta i podziękuj za szczerą informację zwro
    */
   generateEndPrompt(context) {
     return `Zakończ sesję, zadając zadanie domowe i planując kolejne spotkanie. W terapii CBT zadania domowe są kluczowym elementem procesu terapeutycznego.
-    
+
 1. Zaproponuj konkretne zadanie domowe związane z tematami omawianymi podczas sesji, np.:
    - Prowadzenie dziennika myśli
    - Ćwiczenie techniki restrukturyzacji poznawczej
@@ -347,6 +359,62 @@ Wysłuchaj uważnie odpowiedzi klienta i podziękuj za szczerą informację zwro
         ]
       }
     ];
+  }
+
+  /**
+   * Aktualizuje prompt dla określonego stanu
+   * @param {string} promptType - Typ prompta (np. 'systemPrompt', 'initializePrompt')
+   * @param {string} newPrompt - Nowy tekst prompta
+   */
+  updatePrompt(promptType, newPrompt) {
+    if (this.prompts.hasOwnProperty(promptType)) {
+      this.prompts[promptType] = newPrompt;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Resetuje prompt do wartości domyślnej
+   * @param {string} promptType - Typ prompta (np. 'systemPrompt', 'initializePrompt')
+   */
+  resetPromptToDefault(promptType) {
+    if (this.prompts.hasOwnProperty(promptType)) {
+      // Tworzymy nowy obiekt kontekstu, aby uniknąć błędów
+      const emptyContext = {};
+
+      // Wywołujemy odpowiednią metodę generującą prompt
+      switch (promptType) {
+        case 'systemPrompt':
+          this.prompts[promptType] = this.generateSystemPrompt(emptyContext);
+          break;
+        case 'initializePrompt':
+          this.prompts[promptType] = this.generateInitializePrompt(emptyContext);
+          break;
+        case 'moodCheckPrompt':
+          this.prompts[promptType] = this.generateMoodCheckPrompt(emptyContext);
+          break;
+        case 'setAgendaPrompt':
+          this.prompts[promptType] = this.generateSetAgendaPrompt(emptyContext);
+          break;
+        case 'mainTherapyPrompt':
+          this.prompts[promptType] = this.generateMainTherapyPrompt(emptyContext);
+          break;
+        case 'summarizePrompt':
+          this.prompts[promptType] = this.generateSummarizePrompt(emptyContext);
+          break;
+        case 'feedbackPrompt':
+          this.prompts[promptType] = this.generateFeedbackPrompt(emptyContext);
+          break;
+        case 'endPrompt':
+          this.prompts[promptType] = this.generateEndPrompt(emptyContext);
+          break;
+        default:
+          return false;
+      }
+      return true;
+    }
+    return false;
   }
 }
 

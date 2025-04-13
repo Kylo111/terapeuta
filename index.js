@@ -14,6 +14,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Importowanie tras API
+const therapyMethodsApi = require('./app/api/therapy_methods_api');
+
+// Rejestracja tras API
+app.use('/api/therapy-methods', therapyMethodsApi);
+
 // Podstawowa trasa
 app.get('/', (req, res) => {
   res.json({
@@ -35,10 +41,10 @@ app.use((err, req, res, next) => {
 // Połączenie z bazą danych MongoDB
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.NODE_ENV === 'production' 
-      ? process.env.MONGODB_URI_PROD 
+    const mongoURI = process.env.NODE_ENV === 'production'
+      ? process.env.MONGODB_URI_PROD
       : process.env.MONGODB_URI;
-    
+
     await mongoose.connect(mongoURI);
     console.log('Połączono z bazą danych MongoDB');
   } catch (error) {

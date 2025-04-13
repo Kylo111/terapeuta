@@ -43,10 +43,12 @@
 19. Projektowanie API (docs/api_overview.md, docs/api_auth.md, docs/api_users.md, docs/api_profiles.md, docs/api_sessions.md, docs/api_tasks.md, docs/api_therapy.md, docs/api_llm.md)
 20. Projektowanie struktury stanu aplikacji (docs/app_state.md)
 21. Utworzenie repozytorium na GitHub (https://github.com/Kylo111/terapeuta)
+22. Implementacja pozostałych metod terapii (psychodynamiczna, humanistyczna, systemowa, skoncentrowana na rozwiązaniach)
+23. Implementacja modułu zarządzania metodami terapii
+24. Implementacja API do podglądu i modyfikacji promptów metod terapii
 
 ## Następne kroki
 
-1. Implementacja pozostałych metod terapii
-2. Implementacja API dla frontendu
-3. Inicjalizacja projektu frontendowego (Next.js)
-4. Implementacja podstawowych komponentów UI
+1. Implementacja API dla frontendu
+2. Inicjalizacja projektu frontendowego (Next.js)
+3. Implementacja podstawowych komponentów UI
