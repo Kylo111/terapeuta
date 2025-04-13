@@ -99,9 +99,10 @@ app.use((err, req, res, next) => {
 const connectDB = async () => {
   try {
     // Zawsze używamy MongoDB Atlas w tym przypadku
-    const mongoURI = process.env.MONGODB_URI_PROD;
+    // Próbujemy użyć zmiennej środowiskowej, a jeśli nie jest dostępna, używamy bezpośrednio URI
+    const mongoURI = process.env.MONGODB_URI_PROD || 'mongodb+srv://terapeuta-admin:QlKtVvNZ95MJoD2C@cluster0.xhbixsy.mongodb.net/terapeuta?retryWrites=true&w=majority&appName=Cluster0';
 
-    console.log('Próba połączenia z bazą danych MongoDB:', mongoURI);
+    console.log('Próba połączenia z bazą danych MongoDB');
 
     await mongoose.connect(mongoURI);
     console.log('Połączono z bazą danych MongoDB');
