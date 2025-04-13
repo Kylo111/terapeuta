@@ -78,7 +78,11 @@ const taskSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     }
-  }]
+  }],
+  deadlineReminderSent: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 });
@@ -127,7 +131,7 @@ taskSchema.methods.addReminder = function(time, message) {
 taskSchema.methods.markReminderAsSent = function(reminderId) {
   const reminder = this.reminders.id(reminderId);
   if (!reminder) throw new Error('Przypomnienie nie zostało znalezione');
-  
+
   reminder.isSent = true;
   return this.save();
 };

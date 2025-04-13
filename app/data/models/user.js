@@ -81,6 +81,22 @@ const userSchema = new mongoose.Schema({
       },
       push: {
         type: Boolean,
+        default: false
+      },
+      sms: {
+        type: Boolean,
+        default: false
+      },
+      taskReminders: {
+        type: Boolean,
+        default: true
+      },
+      sessionReminders: {
+        type: Boolean,
+        default: true
+      },
+      deadlineReminders: {
+        type: Boolean,
         default: true
       }
     }

@@ -101,6 +101,14 @@ const sessionSchema = new mongoose.Schema({
   isCompleted: {
     type: Boolean,
     default: false
+  },
+  reminderSent: {
+    type: Boolean,
+    default: false
+  },
+  reminderSent1h: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
@@ -120,19 +128,19 @@ sessionSchema.methods.addMessage = function(role, content) {
 sessionSchema.methods.endSession = function(summary, emotionalStateEnd, effectivenessRating) {
   this.endTime = new Date();
   this.isCompleted = true;
-  
+
   if (summary) {
     this.summary = summary;
   }
-  
+
   if (emotionalStateEnd) {
     this.metrics.emotionalStateEnd = emotionalStateEnd;
   }
-  
+
   if (effectivenessRating) {
     this.metrics.sessionEffectivenessRating = effectivenessRating;
   }
-  
+
   return this.save();
 };
 
