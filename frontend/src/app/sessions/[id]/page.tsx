@@ -29,9 +29,10 @@ export default function SessionDetailPage() {
       const sessionData = await getSession(sessionId);
       setSession(sessionData);
 
-      // Pobieranie transkrypcji sesji
-      const transcriptData = await getSessionTranscript(sessionId);
-      setTranscript(transcriptData);
+      // Ustawienie transkrypcji z konwersacji sesji
+      if (sessionData.conversation) {
+        setTranscript(sessionData.conversation);
+      }
 
       // Pobieranie zadań sesji
       const tasksData = await getSessionTasks(sessionId);
@@ -134,11 +135,11 @@ export default function SessionDetailPage() {
           <div>
             <h1 className="text-3xl font-bold">Szczegóły sesji</h1>
             <p className="text-gray-600 mt-2">
-              {formatDateTime(session.date)} | {session.profileName}
+              {formatDateTime(session.startTime)} | Profil: {session.profileName || session.profile}
             </p>
           </div>
           <div className="flex space-x-2">
-            <Link href={`/profile/${session.profileId}`}>
+            <Link href={`/profile/${session.profile}`}>
               <Button variant="outline">Profil</Button>
             </Link>
             <Link href="/sessions/new">
@@ -153,11 +154,11 @@ export default function SessionDetailPage() {
               <div>
                 <CardTitle>{getTherapyMethodLabel(session.therapyMethod)}</CardTitle>
                 <CardDescription>
-                  Czas trwania: {session.duration} min | Status: {session.status === 'completed' ? 'Ukończona' : 'W trakcie'}
+                  Numer sesji: {session.sessionNumber} | Status: {session.isCompleted ? 'Ukończona' : 'W trakcie'}
                 </CardDescription>
               </div>
               <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                {session.status === 'completed' ? 'Ukończona' : 'W trakcie'}
+                {session.isCompleted ? 'Ukończona' : 'W trakcie'}
               </span>
             </div>
           </CardHeader>

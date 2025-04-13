@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDate, formatDateTime } from '@/lib/utils';
-import { getSessions, Session as SessionType } from '@/lib/api/sessionsApi';
+import { getSessions, getSessionsByProfile, Session as SessionType } from '@/lib/api/sessionsApi';
 import { getProfiles, Profile as ProfileType } from '@/lib/api/profilesApi';
 import { toast } from 'react-toastify';
 
@@ -31,10 +31,17 @@ export default function SessionsPage() {
       setProfiles(profilesData);
 
       // Pobieranie sesji z filtrowaniem po profilu, jeśli podano
-      const sessionsData = await getSessions(
-        profileIdParam ? { profileId: profileIdParam } : undefined
-      );
-      setSessions(sessionsData);
+      if (profileIdParam) {
+        const sessionsData = await getSessionsByProfile(profileIdParam);
+        setSessions(sessionsData);
+      } else if (profilesData.length > 0) {
+        // Jeśli nie podano profilu, pobierz sesje dla pierwszego profilu
+        const sessionsData = await getSessionsByProfile(profilesData[0]._id);
+        setSessions(sessionsData);
+        setSelectedProfileId(profilesData[0]._id);
+      } else {
+        setSessions([]);
+      }
 
       setError(null);
     } catch (err) {
@@ -57,11 +64,13 @@ export default function SessionsPage() {
     try {
       setIsLoading(true);
 
-      // Pobieranie sesji z filtrowaniem po profilu
-      const sessionsData = await getSessions(
-        profileId ? { profileId } : undefined
-      );
-      setSessions(sessionsData);
+      // Pobieranie sesji dla wybranego profilu
+      if (profileId) {
+        const sessionsData = await getSessionsByProfile(profileId);
+        setSessions(sessionsData);
+      } else {
+        setSessions([]);
+      }
 
       setError(null);
     } catch (err) {
@@ -139,13 +148,13 @@ export default function SessionsPage() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle>{formatDateTime(session.date)}</CardTitle>
+                      <CardTitle>{formatDateTime(session.startTime)}</CardTitle>
                       <CardDescription>
-                        {session.profileName} | {getTherapyMethodLabel(session.therapyMethod)} | {session.duration} min
+                        Profil: {session.profileName || session.profile} | {getTherapyMethodLabel(session.therapyMethod)}
                       </CardDescription>
                     </div>
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                      {session.status === 'completed' ? 'Ukończona' : 'W trakcie'}
+                      {session.isCompleted ? 'Ukończona' : 'W trakcie'}
                     </span>
                   </div>
                 </CardHeader>
@@ -153,7 +162,7 @@ export default function SessionsPage() {
                   <p>{session.summary}</p>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Link href={`/profile/${session.profileId}`}>
+                  <Link href={`/profile/${session.profile}`}>
                     <Button variant="outline">Profil</Button>
                   </Link>
                   <Link href={`/sessions/${session._id}`}>

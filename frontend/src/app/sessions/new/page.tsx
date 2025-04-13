@@ -27,8 +27,11 @@ export default function NewSessionPage() {
   const [sessionData, setSessionData] = useState<CreateSessionData>({
     profileId: profileIdParam || '',
     therapyMethod: '',
-    initialMessage: '',
-    mood: 5
+    emotionalStateStart: {
+      anxiety: 5,
+      depression: 5,
+      optimism: 5
+    }
   });
 
   const fetchData = async () => {
@@ -59,10 +62,21 @@ export default function NewSessionPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSessionData({
-      ...sessionData,
-      [name]: value
-    });
+
+    if (name === 'anxiety' || name === 'depression' || name === 'optimism') {
+      setSessionData({
+        ...sessionData,
+        emotionalStateStart: {
+          ...sessionData.emotionalStateStart,
+          [name]: parseInt(value)
+        }
+      });
+    } else {
+      setSessionData({
+        ...sessionData,
+        [name]: value
+      });
+    }
   };
 
   const handleStartSession = async () => {
@@ -142,35 +156,75 @@ export default function NewSessionPage() {
                   ]}
                 />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Jak się dzisiaj czujesz? (1-10)
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-500">1</span>
-                    <input
-                      type="range"
-                      name="mood"
-                      min="1"
-                      max="10"
-                      value={sessionData.mood}
-                      onChange={handleInputChange}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-sm text-gray-500">10</span>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Poziom lęku (0-10)
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">0</span>
+                      <input
+                        type="range"
+                        name="anxiety"
+                        min="0"
+                        max="10"
+                        value={sessionData.emotionalStateStart.anxiety}
+                        onChange={handleInputChange}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-500">10</span>
+                    </div>
+                    <div className="text-center mt-1">
+                      <span className="text-sm font-medium">{sessionData.emotionalStateStart.anxiety}</span>
+                    </div>
                   </div>
-                  <div className="text-center mt-1">
-                    <span className="text-sm font-medium">{sessionData.mood}</span>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Poziom depresji (0-10)
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">0</span>
+                      <input
+                        type="range"
+                        name="depression"
+                        min="0"
+                        max="10"
+                        value={sessionData.emotionalStateStart.depression}
+                        onChange={handleInputChange}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-500">10</span>
+                    </div>
+                    <div className="text-center mt-1">
+                      <span className="text-sm font-medium">{sessionData.emotionalStateStart.depression}</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Poziom optymizmu (0-10)
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">0</span>
+                      <input
+                        type="range"
+                        name="optimism"
+                        min="0"
+                        max="10"
+                        value={sessionData.emotionalStateStart.optimism}
+                        onChange={handleInputChange}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-500">10</span>
+                    </div>
+                    <div className="text-center mt-1">
+                      <span className="text-sm font-medium">{sessionData.emotionalStateStart.optimism}</span>
+                    </div>
                   </div>
                 </div>
 
-                <Textarea
-                  label="Wiadomość początkowa (opcjonalnie)"
-                  name="initialMessage"
-                  value={sessionData.initialMessage}
-                  onChange={handleInputChange}
-                  placeholder="Opisz, co chciałbyś omówić podczas tej sesji..."
-                />
+
               </div>
             )}
           </CardContent>
