@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const notificationCron = require('./app/cron/notification.cron');
 let Sentry;
 
 // Warunkowy import Sentry
@@ -61,6 +62,7 @@ const reportRoutes = require('./app/routes/report.routes');
 const exportRoutes = require('./app/routes/export.routes');
 const exerciseRoutes = require('./app/routes/exercise.routes');
 const thoughtJournalRoutes = require('./app/routes/thought-journal.routes');
+const notificationRoutes = require('./app/routes/notification.routes');
 // Tymczasowo wyłączamy importy, które mogą powodować problemy
 // const usersApi = require('./app/api/users_api');
 // const profilesApi = require('./app/api/profiles_api');
@@ -79,6 +81,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/journal', thoughtJournalRoutes);
+app.use('/api/notifications', notificationRoutes);
 // app.use('/api/users', usersApi);
 // app.use('/api/profiles', profilesApi);
 // app.use('/api/therapy', therapyApi);
@@ -134,6 +137,10 @@ app.listen(PORT, async () => {
   // Połącz z bazą danych
   await connectDB();
   console.log(`Środowisko: ${process.env.NODE_ENV || 'development'}`);
+
+  // Inicjalizacja zadań cron
+  notificationCron.initNotificationCron();
+  console.log('Zainicjalizowano zadania cron do wysyłania powiadomień');
 });
 
 // Obsługa zamknięcia aplikacji

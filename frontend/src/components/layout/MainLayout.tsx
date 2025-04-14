@@ -14,11 +14,13 @@ import {
   XMarkIcon,
   ChartBarIcon,
   BookOpenIcon,
-  HeartIcon
+  HeartIcon,
+  BellIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/lib/context/AuthContext';
 import { cn } from '@/lib/utils';
 import UmamiAnalytics from '@/components/analytics/UmamiAnalytics';
+import Header from '@/components/layout/Header';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -36,6 +38,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { name: 'Zadania', href: '/tasks', icon: ClipboardDocumentListIcon },
     { name: 'Ćwiczenia', href: '/exercises', icon: HeartIcon },
     { name: 'Dziennik', href: '/journal', icon: BookOpenIcon },
+    { name: 'Powiadomienia', href: '/notifications', icon: BellIcon },
     { name: 'Raporty', href: '/reports', icon: ChartBarIcon },
     { name: 'Ustawienia', href: '/settings', icon: Cog6ToothIcon },
   ];
@@ -176,8 +179,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         </div>
       </div>
 
+      {/* Header */}
+      <Header />
+
       {/* Main content */}
-      <div className="md:pl-64">
+      <div className="md:pl-64 pt-16">
         <main className="py-6">
           {children}
         </main>
