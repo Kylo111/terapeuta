@@ -70,25 +70,60 @@
 - Rozbudowa modelu zadania
 - Aktualizacja API klienta dla zadań
 
-### 2. System przypomnień
-- Implementacja serwisu przypomnień
-- Implementacja kontrolera przypomnień
-- Implementacja tras API dla przypomnień
-- Implementacja mechanizmu wysyłania przypomnień (e-mail)
-- Implementacja zadań cron do automatycznego wysyłania przypomnień
+### 2. System przypomnień i powiadomień
+- Implementacja modelu powiadomień
+- Implementacja serwisu powiadomień
+- Implementacja kontrolera powiadomień
+- Implementacja tras API dla powiadomień
+- Implementacja mechanizmu wysyłania powiadomień (e-mail)
+- Implementacja zadań cron do automatycznego wysyłania powiadomień
 
 ### 3. Interfejs użytkownika dla zarządzania powiadomieniami
-- Implementacja komponentu ustawień powiadomień
-- Implementacja strony ustawień powiadomień
-- Implementacja funkcji ręcznego wysyłania przypomnień
-- Implementacja komponentu historii powiadomień
-- Implementacja strony historii powiadomień
+- Implementacja komponentu dzwonka powiadomień
+- Implementacja strony powiadomień z filtrowaniem i sortowaniem
+- Implementacja strony tworzenia przypomnienia
+- Implementacja komponentu DateTimePicker
+- Integracja powiadomień z nagłówkiem aplikacji
+
+### 4. Zaawansowane funkcje terapeutyczne
+- Implementacja ćwiczeń terapeutycznych
+- Implementacja dziennika myśli i emocji
+- Implementacja technik relaksacyjnych
+- Implementacja technik poznawczych
+- Implementacja technik behawioralnych
 
 ## Następne kroki
 
-1. Implementacja systemu raportowania - generowanie raportów z sesji terapeutycznych, analiza postępów terapii
-2. Implementacja systemu eksportu/importu danych - eksportowanie i importowanie danych sesji terapeutycznych
-3. Rozbudowa systemu zarządzania profilami - tworzenie, aktualizacja i usuwanie profili pacjentów
-4. Implementacja zaawansowanych funkcji - system diagnozowania i rekomendacji, integracja z urządzeniami fitness
-5. Implementacja zaawansowanego monitorowania postępu - wizualizacja postępu, analiza sentymentu
-6. Implementacja systemu bezpieczeństwa - wykrywanie sygnałów zagrożenia, protokół bezpieczeństwa
+1. Implementacja systemu raportowania i analityki
+   - Generowanie raportów z sesji terapeutycznych
+   - Analiza postępów terapii
+   - Wizualizacja danych za pomocą wykresów i diagramów
+   - Eksport danych do różnych formatów
+   - Rekomendacje terapeutyczne na podstawie zgromadzonych danych
+
+2. Implementacja systemu eksportu/importu danych
+   - Eksportowanie i importowanie danych sesji terapeutycznych
+   - Eksport raportów w różnych formatach (PDF, CSV, JSON)
+   - Funkcje archiwizacji danych
+   - Zgodność z RODO i możliwość usunięcia danych
+
+3. Implementacja funkcji społecznościowych i wsparcia
+   - Forum dyskusyjne
+   - Grupy wsparcia
+   - Czat z innymi użytkownikami
+   - Udostępnianie postępów
+   - Moderacja treści
+
+4. Implementacja systemu zarządzania treścią
+   - Artykuły edukacyjne
+   - Materiały terapeutyczne
+   - Ćwiczenia do pobrania
+   - Zarządzanie treścią przez administratora
+   - Wyszukiwanie treści
+
+5. Implementacja panelu administracyjnego
+   - Zarządzanie użytkownikami
+   - Zarządzanie metodami terapii
+   - Zarządzanie promptami
+   - Monitorowanie aktywności
+   - Statystyki użytkowania

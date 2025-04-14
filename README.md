@@ -8,12 +8,21 @@ Aplikacja "Terapeuta" to kompleksowe rozwiązanie terapeutyczne dostępne na urz
 
 ## Funkcje
 
+### Zaimplementowane
+
 - Różne metody terapii (CBT, psychodynamiczna, humanistyczna, systemowa, skoncentrowana na rozwiązaniach)
 - Inteligentne zarządzanie kontekstem rozmowy
 - Ciągłość terapeutyczna między sesjami
+- System zadań terapeutycznych
+- System powiadomień i przypomnień
+- Dziennik myśli i emocji
+- Ćwiczenia terapeutyczne
+
+### Planowane
+
 - Automatyczne podsumowania i śledzenie postępu
 - System rekomendacji dopasowany do potrzeb użytkownika
-- Warsztat asertywności i system rozliczania zadań
+- Warsztat asertywności
 - Integracja z urządzeniami monitorującymi zdrowie
 
 ## Technologie
@@ -52,20 +61,24 @@ Aplikacja "Terapeuta" to kompleksowe rozwiązanie terapeutyczne dostępne na urz
 
 ```
 app/
-├── api/               # API i integracje zewnętrzne
-│   ├── llm_providers/ # Integracje z modelami LLM
-├── core/              # Logika biznesowa
-│   ├── therapy_engine/    # Silnik zarządzania terapią
-│   ├── therapy_methods/   # Implementacje metod terapii
-│   ├── analytics/         # Analityka i rekomendacje
+├── controllers/       # Kontrolery API
 ├── data/              # Zarządzanie danymi
-│   ├── storage/       # Przechowywanie danych
 │   ├── models/        # Modele danych
-├── ui/                # Interfejs użytkownika
-│   ├── components/    # Komponenty UI
-│   ├── screens/       # Ekrany aplikacji
-│   ├── theme/         # Stylizacja i motywy
+├── routes/            # Trasy API
+├── services/          # Serwisy biznesowe
+├── middleware/        # Middleware
 ├── utils/             # Narzędzia pomocnicze
+├── cron/              # Zadania cron
+
+frontend/
+├── src/
+    ├── app/            # Strony aplikacji (Next.js)
+    ├── components/      # Komponenty UI
+    ├── lib/            # Biblioteki i narzędzia
+        ├── api/         # Klienty API
+        ├── context/     # Konteksty React
+        ├── hooks/       # Hooki React
+        ├── utils/       # Narzędzia pomocnicze
 ```
 
 ## Licencja

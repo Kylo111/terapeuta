@@ -66,7 +66,23 @@
 - [x] Implementacja systemu zarządzania kontekstem sesji
 - [x] Testowanie przepływu terapii
 
-### 3.2. Implementacja metod terapii (3 tygodnie)
+### 3.2. Implementacja zaawansowanych funkcji terapeutycznych (2 tygodnie)
+- [x] Implementacja ćwiczeń terapeutycznych
+- [x] Implementacja dziennika myśli i emocji
+- [x] Implementacja technik relaksacyjnych
+- [x] Implementacja technik poznawczych
+- [x] Implementacja technik behawioralnych
+
+### 3.3. Implementacja systemu powiadomień i przypomnień (2 tygodnie)
+- [x] Implementacja modelu powiadomień
+- [x] Implementacja serwisu powiadomień
+- [x] Implementacja kontrolera powiadomień
+- [x] Implementacja tras API dla powiadomień
+- [x] Implementacja mechanizmu wysyłania powiadomień (e-mail)
+- [x] Implementacja zadań cron do automatycznego wysyłania powiadomień
+- [x] Implementacja interfejsu użytkownika dla zarządzania powiadomieniami
+
+### 3.4. Implementacja metod terapii (3 tygodnie)
 - [x] Implementacja terapii poznawczo-behawioralnej (CBT)
 - [x] Implementacja terapii psychodynamicznej
 - [x] Implementacja terapii humanistyczno-egzystencjalnej
@@ -87,9 +103,22 @@
 - [ ] Implementacja systemu monitorowania postępów
 - [ ] Integracja warsztatu z głównym systemem terapii
 
-## 4. Faza 3: Zaawansowane Funkcje (6 tygodni)
+## 4. Faza 3: Zaawansowane Funkcje i Analityka (6 tygodni)
 
-### 4.1. Implementacja systemu diagnozowania i rekomendacji (2 tygodnie)
+### 4.1. Implementacja systemu raportowania i analityki (2 tygodnie)
+- [ ] Generowanie raportów z sesji terapeutycznych
+- [ ] Analiza postępów terapii
+- [ ] Wizualizacja danych za pomocą wykresów i diagramów
+- [ ] Eksport danych do różnych formatów
+- [ ] Rekomendacje terapeutyczne na podstawie zgromadzonych danych
+
+### 4.2. Implementacja systemu eksportu/importu danych (2 tygodnie)
+- [ ] Eksportowanie i importowanie danych sesji terapeutycznych
+- [ ] Eksport raportów w różnych formatach (PDF, CSV, JSON)
+- [ ] Funkcje archiwizacji danych
+- [ ] Zgodność z RODO i możliwość usunięcia danych
+
+### 4.3. Implementacja systemu diagnozowania i rekomendacji (2 tygodnie)
 - [ ] Implementacja analizy wzorców językowych
 - [ ] Implementacja systemu wstępnej diagnozy
 - [ ] Implementacja systemu rekomendacji metod terapii
