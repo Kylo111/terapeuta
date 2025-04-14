@@ -12,7 +12,9 @@ import {
   ArrowRightOnRectangleIcon,
   Bars3Icon,
   XMarkIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  BookOpenIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/lib/context/AuthContext';
 import { cn } from '@/lib/utils';
@@ -32,6 +34,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { name: 'Profile', href: '/profile', icon: UserIcon },
     { name: 'Sesje', href: '/sessions', icon: ChatBubbleLeftRightIcon },
     { name: 'Zadania', href: '/tasks', icon: ClipboardDocumentListIcon },
+    { name: 'Ćwiczenia', href: '/exercises', icon: HeartIcon },
+    { name: 'Dziennik', href: '/journal', icon: BookOpenIcon },
     { name: 'Raporty', href: '/reports', icon: ChartBarIcon },
     { name: 'Ustawienia', href: '/settings', icon: Cog6ToothIcon },
   ];
