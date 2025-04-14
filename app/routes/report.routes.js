@@ -47,6 +47,13 @@ router.post('/progress/:profileId', reportController.generateProgressReport);
 router.post('/tasks/:profileId', reportController.generateTasksReport);
 
 /**
+ * @route POST /api/reports/sentiment/:profileId
+ * @desc Generuje raport analizy sentymentu
+ * @access Private
+ */
+router.post('/sentiment/:profileId', reportController.generateSentimentReport);
+
+/**
  * @route DELETE /api/reports/:id
  * @desc Usuwa raport
  * @access Private

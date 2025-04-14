@@ -27,6 +27,18 @@ export default function NewReportPage() {
     endDate: ''
   });
 
+  // Sprawdzenie, czy jest parametr typu raportu w URL
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const typeParam = searchParams.get('type');
+    if (typeParam && ['progress', 'tasks', 'sentiment'].includes(typeParam)) {
+      setFormData(prev => ({
+        ...prev,
+        reportType: typeParam
+      }));
+    }
+  }, []);
+
   useEffect(() => {
     fetchProfiles();
   }, []);
@@ -36,14 +48,14 @@ export default function NewReportPage() {
       setIsLoading(true);
       const profilesData = await getProfiles();
       setProfiles(profilesData);
-      
+
       if (profilesData.length > 0) {
         setFormData(prev => ({
           ...prev,
           profileId: profilesData[0]._id
         }));
       }
-      
+
       setError(null);
     } catch (err) {
       console.error('Błąd pobierania profili:', err);
@@ -63,30 +75,32 @@ export default function NewReportPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.profileId) {
       toast.error('Wybierz profil');
       return;
     }
-    
+
     try {
       setIsGenerating(true);
-      
+
       const options = {
         startDate: formData.startDate || undefined,
         endDate: formData.endDate || undefined
       };
-      
+
       let report;
-      
+
       if (formData.reportType === 'progress') {
         report = await generateProgressReport(formData.profileId, options);
       } else if (formData.reportType === 'tasks') {
         report = await generateTasksReport(formData.profileId, options);
+      } else if (formData.reportType === 'sentiment') {
+        report = await generateSentimentReport(formData.profileId, options);
       } else {
         throw new Error('Nieobsługiwany typ raportu');
       }
-      
+
       toast.success('Raport został wygenerowany');
       router.push(`/reports/${report._id}`);
     } catch (err) {
@@ -168,6 +182,10 @@ export default function NewReportPage() {
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="tasks" id="tasks" />
                     <Label htmlFor="tasks" className="cursor-pointer">Raport zadań</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="sentiment" id="sentiment" />
+                    <Label htmlFor="sentiment" className="cursor-pointer">Analiza sentymentu</Label>
                   </div>
                 </RadioGroup>
               </div>

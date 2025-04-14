@@ -110,6 +110,80 @@ export default function DashboardPage() {
               </Card>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Monitorowanie postępu</CardTitle>
+                  <CardDescription>Zaawansowana analiza postępu terapii</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex flex-col items-center">
+                    <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    <p className="text-center text-gray-600 mb-4">
+                      Śledź swój postęp w terapii za pomocą zaawansowanych wykresów i analiz
+                    </p>
+                  </div>
+                </CardContent>
+                <CardFooter className="pt-0">
+                  <Link href="/dashboard/progress" className="w-full">
+                    <Button className="w-full">Przejdź do dashboardu postępu</Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Analiza sentymentu</CardTitle>
+                  <CardDescription>Analiza emocjonalna sesji i zadań</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex flex-col items-center">
+                    <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-center text-gray-600 mb-4">
+                      Sprawdź, jak zmienia się Twój nastrój i emocje w trakcie terapii
+                    </p>
+                  </div>
+                </CardContent>
+                <CardFooter className="pt-0">
+                  <Link href="/reports/new?type=sentiment" className="w-full">
+                    <Button className="w-full">Generuj raport sentymentu</Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Raporty postępu</CardTitle>
+                  <CardDescription>Szczegółowe raporty z terapii</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex flex-col items-center">
+                    <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-center text-gray-600 mb-4">
+                      Generuj szczegółowe raporty z sesji, zadań i ogólnego postępu
+                    </p>
+                  </div>
+                </CardContent>
+                <CardFooter className="pt-0">
+                  <Link href="/reports" className="w-full">
+                    <Button className="w-full">Przejdź do raportów</Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>

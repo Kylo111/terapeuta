@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import SessionReportDetails from '@/components/reports/SessionReportDetails';
 import ProgressReportDetails from '@/components/reports/ProgressReportDetails';
 import TasksReportDetails from '@/components/reports/TasksReportDetails';
+import EmotionalReportDetails from '@/components/reports/EmotionalReportDetails';
 
 export default function ReportDetailPage() {
   const params = useParams();
@@ -166,8 +167,11 @@ export default function ReportDetailPage() {
             {report.type === 'session' && (
               <TabsTrigger value="insights">Wnioski</TabsTrigger>
             )}
+            {report.type === 'emotional' && (
+              <TabsTrigger value="sentiment">Analiza sentymentu</TabsTrigger>
+            )}
           </TabsList>
-          
+
           <TabsContent value="details">
             {report.type === 'session' && (
               <SessionReportDetails report={report} />
@@ -178,8 +182,11 @@ export default function ReportDetailPage() {
             {report.type === 'tasks' && (
               <TasksReportDetails report={report} />
             )}
+            {report.type === 'emotional' && (
+              <EmotionalReportDetails report={report} />
+            )}
           </TabsContent>
-          
+
           {report.type === 'progress' && (
             <TabsContent value="charts">
               <Card>
@@ -197,7 +204,7 @@ export default function ReportDetailPage() {
               </Card>
             </TabsContent>
           )}
-          
+
           {report.type === 'tasks' && (
             <TabsContent value="statistics">
               <Card>
@@ -215,7 +222,7 @@ export default function ReportDetailPage() {
               </Card>
             </TabsContent>
           )}
-          
+
           {report.type === 'session' && (
             <TabsContent value="insights">
               <Card>
@@ -239,6 +246,12 @@ export default function ReportDetailPage() {
                   )}
                 </CardContent>
               </Card>
+            </TabsContent>
+          )}
+
+          {report.type === 'emotional' && (
+            <TabsContent value="sentiment">
+              <EmotionalReportDetails report={report} />
             </TabsContent>
           )}
         </Tabs>

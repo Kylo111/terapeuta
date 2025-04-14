@@ -6,6 +6,7 @@
 const Report = require('../data/models/report');
 const Profile = require('../data/models/profile');
 const reportService = require('../services/report.service');
+const sentimentService = require('../services/sentiment.service');
 
 /**
  * Pobiera wszystkie raporty użytkownika
@@ -19,7 +20,7 @@ exports.getReports = async (req, res) => {
 
     // Przygotowanie filtrów
     const filters = { user: userId };
-    
+
     if (profileId) {
       // Sprawdzenie, czy profil należy do użytkownika
       const profile = await Profile.findOne({ _id: profileId, user: userId });
@@ -222,6 +223,38 @@ exports.generateTasksReport = async (req, res) => {
     });
   } catch (error) {
     console.error('Błąd podczas generowania raportu zadań:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'SERVER_ERROR',
+        message: error.message || 'Błąd serwera'
+      }
+    });
+  }
+};
+
+/**
+ * Generuje raport analizy sentymentu
+ * @param {Object} req - Obiekt żądania Express
+ * @param {Object} res - Obiekt odpowiedzi Express
+ */
+exports.generateSentimentReport = async (req, res) => {
+  try {
+    const { profileId } = req.params;
+    const userId = req.user.userId;
+    const { startDate, endDate } = req.body;
+
+    // Generowanie raportu
+    const report = await sentimentService.generateSentimentReport(profileId, userId, { startDate, endDate });
+
+    res.json({
+      success: true,
+      data: {
+        report
+      }
+    });
+  } catch (error) {
+    console.error('Błąd podczas generowania raportu analizy sentymentu:', error);
     res.status(500).json({
       success: false,
       error: {
