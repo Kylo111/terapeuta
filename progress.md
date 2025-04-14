@@ -62,13 +62,33 @@
 38. Testowanie aplikacji (testy jednostkowe, integracyjne)
 39. Wdrożenie aplikacji (konfiguracja Render, Vercel, Sentry, Umami)
 
+## Zrealizowane funkcjonalności
+
+### 1. System zarządzania zadaniami
+- Implementacja dedykowanego kontrolera zadań
+- Implementacja tras API dla zadań
+- Rozbudowa modelu zadania
+- Aktualizacja API klienta dla zadań
+
+### 2. System przypomnień
+- Implementacja serwisu przypomnień
+- Implementacja kontrolera przypomnień
+- Implementacja tras API dla przypomnień
+- Implementacja mechanizmu wysyłania przypomnień (e-mail)
+- Implementacja zadań cron do automatycznego wysyłania przypomnień
+
+### 3. Interfejs użytkownika dla zarządzania powiadomieniami
+- Implementacja komponentu ustawień powiadomień
+- Implementacja strony ustawień powiadomień
+- Implementacja funkcji ręcznego wysyłania przypomnień
+- Implementacja komponentu historii powiadomień
+- Implementacja strony historii powiadomień
+
 ## Następne kroki
 
-1. Implementacja systemu powiadomień - informowanie użytkowników o nowych sesjach, zadaniach i przypomnieniach
-2. Implementacja systemu raportowania - generowanie raportów z sesji terapeutycznych, analiza postępów terapii
-3. Implementacja systemu eksportu/importu danych - eksportowanie i importowanie danych sesji terapeutycznych
-4. Rozbudowa systemu zarządzania profilami - tworzenie, aktualizacja i usuwanie profili pacjentów
-5. Rozbudowa systemu zarządzania zadaniami - zarządzanie zadaniami przypisanymi podczas sesji terapeutycznych
-6. Implementacja zaawansowanych funkcji - system diagnozowania i rekomendacji, integracja z urządzeniami fitness
-7. Implementacja zaawansowanego monitorowania postępu - wizualizacja postępu, analiza sentymentu
-8. Implementacja systemu bezpieczeństwa - wykrywanie sygnałów zagrożenia, protokół bezpieczeństwa
+1. Implementacja systemu raportowania - generowanie raportów z sesji terapeutycznych, analiza postępów terapii
+2. Implementacja systemu eksportu/importu danych - eksportowanie i importowanie danych sesji terapeutycznych
+3. Rozbudowa systemu zarządzania profilami - tworzenie, aktualizacja i usuwanie profili pacjentów
+4. Implementacja zaawansowanych funkcji - system diagnozowania i rekomendacji, integracja z urządzeniami fitness
+5. Implementacja zaawansowanego monitorowania postępu - wizualizacja postępu, analiza sentymentu
+6. Implementacja systemu bezpieczeństwa - wykrywanie sygnałów zagrożenia, protokół bezpieczeństwa

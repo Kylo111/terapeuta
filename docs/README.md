@@ -73,12 +73,15 @@ Obecny status projektu można znaleźć w pliku [progress.md](../progress.md) w 
 - Zarządzanie sesjami terapeutycznymi
 - Integracja z modelami językowymi (OpenAI, Anthropic, Google, HuggingFace)
 - Generowanie odpowiedzi asystenta dla sesji terapeutycznych
+- System zarządzania zadaniami
+- System przypomnień i powiadomień
+- Interfejs użytkownika dla zarządzania powiadomieniami
 
 ### Planowane funkcjonalności
 
-- System powiadomień
-- System raportowania
-- System eksportu/importu danych
-- Rozbudowa systemu zarządzania profilami
-- Rozbudowa systemu zarządzania zadaniami
-- Zaawansowane funkcje (diagnozowanie, rekomendacje, integracja z urządzeniami fitness)
+- System raportowania - generowanie raportów z sesji terapeutycznych, analiza postępów terapii
+- System eksportu/importu danych - eksportowanie i importowanie danych sesji terapeutycznych
+- Rozbudowa systemu zarządzania profilami - tworzenie, aktualizacja i usuwanie profili pacjentów
+- Zaawansowane funkcje - system diagnozowania i rekomendacji, integracja z urządzeniami fitness
+- Zaawansowane monitorowanie postępu - wizualizacja postępu, analiza sentymentu
+- System bezpieczeństwa - wykrywanie sygnałów zagrożenia, protokół bezpieczeństwa

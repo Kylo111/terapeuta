@@ -75,9 +75,9 @@
 
 ### 3.3. Implementacja systemu zarządzania zadaniami (2 tygodnie)
 - [x] Implementacja modelu danych dla zadań terapeutycznych
-- [ ] Implementacja systemu przypomnień
+- [x] Implementacja systemu przypomnień
 - [x] Implementacja podstawowego interfejsu zarządzania zadaniami
-- [ ] Implementacja systemu raportowania wykonania zadań
+- [x] Implementacja systemu raportowania wykonania zadań
 - [x] Implementacja integracji zadań z sesjami terapeutycznymi
 
 ### 3.4. Implementacja warsztatu asertywności (1 tydzień)
