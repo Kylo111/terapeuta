@@ -9,7 +9,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDate, formatDateTime } from '@/lib/utils';
-import { getTask, updateTask, completeTask, Task as TaskType } from '@/lib/api/tasksApi';
+import { getTask, updateTask, completeTask, addReminder, deleteReminder, Task as TaskType } from '@/lib/api/tasksApi';
+import { sendTaskReminder, sendDeadlineReminder } from '@/lib/api/remindersApi';
 import { toast } from 'react-toastify';
 
 export default function TaskDetailPage() {
@@ -22,6 +23,11 @@ export default function TaskDetailPage() {
     status: '',
     reflection: ''
   });
+  const [newReminder, setNewReminder] = useState({
+    time: '',
+    message: ''
+  });
+  const [isAddingReminder, setIsAddingReminder] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchTaskData = async () => {
@@ -102,6 +108,83 @@ export default function TaskDetailPage() {
       ...editedTask,
       [name]: value
     });
+  };
+
+  const handleReminderInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewReminder({
+      ...newReminder,
+      [name]: value
+    });
+  };
+
+  const handleAddReminder = async () => {
+    try {
+      if (!task) return;
+      if (!newReminder.time || !newReminder.message) {
+        toast.error('Podaj czas i treść przypomnienia');
+        return;
+      }
+
+      setIsLoading(true);
+      const updatedTask = await addReminder(task._id, newReminder);
+      setTask(updatedTask);
+      setNewReminder({ time: '', message: '' });
+      setIsAddingReminder(false);
+      toast.success('Przypomnienie zostało dodane');
+    } catch (err) {
+      console.error('Błąd dodawania przypomnienia:', err);
+      toast.error('Nie udało się dodać przypomnienia');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteReminder = async (reminderId) => {
+    try {
+      if (!task) return;
+      if (!window.confirm('Czy na pewno chcesz usunąć to przypomnienie?')) return;
+
+      setIsLoading(true);
+      const updatedTask = await deleteReminder(task._id, reminderId);
+      setTask(updatedTask);
+      toast.success('Przypomnienie zostało usunięte');
+    } catch (err) {
+      console.error('Błąd usuwania przypomnienia:', err);
+      toast.error('Nie udało się usunąć przypomnienia');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendReminder = async (reminderId) => {
+    try {
+      if (!task) return;
+
+      setIsLoading(true);
+      await sendTaskReminder(task._id, reminderId);
+      toast.success('Przypomnienie zostało wysłane');
+    } catch (err) {
+      console.error('Błąd wysyłania przypomnienia:', err);
+      toast.error('Nie udało się wysłać przypomnienia');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendDeadlineReminder = async () => {
+    try {
+      if (!task) return;
+
+      setIsLoading(true);
+      await sendDeadlineReminder(task._id);
+      toast.success('Przypomnienie o terminie zostało wysłane');
+    } catch (err) {
+      console.error('Błąd wysyłania przypomnienia o terminie:', err);
+      toast.error('Nie udało się wysłać przypomnienia o terminie');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getTaskStatusLabel = (status) => {
@@ -322,7 +405,7 @@ export default function TaskDetailPage() {
             </Card>
 
             {task.feedback && (
-              <Card>
+              <Card className="mb-6">
                 <CardHeader>
                   <CardTitle>Informacja zwrotna</CardTitle>
                 </CardHeader>
@@ -331,6 +414,116 @@ export default function TaskDetailPage() {
                 </CardContent>
               </Card>
             )}
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Przypomnienia</CardTitle>
+                  <CardDescription>
+                    Zarządzaj przypomnieniami dla tego zadania
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsAddingReminder(!isAddingReminder)}
+                >
+                  {isAddingReminder ? 'Anuluj' : 'Dodaj przypomnienie'}
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {isAddingReminder && (
+                  <div className="mb-6 p-4 border rounded-lg">
+                    <h3 className="text-lg font-medium mb-4">Nowe przypomnienie</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="reminder-time">Czas przypomnienia</Label>
+                        <Input
+                          id="reminder-time"
+                          name="time"
+                          type="datetime-local"
+                          value={newReminder.time}
+                          onChange={handleReminderInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="reminder-message">Treść przypomnienia</Label>
+                        <Textarea
+                          id="reminder-message"
+                          name="message"
+                          value={newReminder.message}
+                          onChange={handleReminderInputChange}
+                          placeholder="Wpisz treść przypomnienia..."
+                          className="mt-1"
+                        />
+                      </div>
+                      <div className="flex justify-end">
+                        <Button onClick={handleAddReminder}>Dodaj przypomnienie</Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium">Przypomnienie o terminie</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSendDeadlineReminder}
+                    >
+                      Wyślij przypomnienie
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Termin wykonania: <strong>{formatDateTime(task.dueDate)}</strong>
+                  </p>
+
+                  <h3 className="text-lg font-medium mb-4">Niestandardowe przypomnienia</h3>
+                  {task.reminders && task.reminders.length > 0 ? (
+                    <ul className="space-y-4">
+                      {task.reminders.map((reminder) => (
+                        <li key={reminder._id} className="p-4 border rounded-lg">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-medium">{reminder.message}</p>
+                              <p className="text-sm text-gray-500">
+                                Czas: {formatDateTime(reminder.time)}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                Status: {reminder.isSent ? 'Wysłane' : 'Oczekujące'}
+                              </p>
+                            </div>
+                            <div className="flex space-x-2">
+                              {!reminder.isSent && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleSendReminder(reminder._id)}
+                                >
+                                  Wyślij teraz
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-500 hover:text-red-700"
+                                onClick={() => handleDeleteReminder(reminder._id)}
+                              >
+                                Usuń
+                              </Button>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-500">Brak niestandardowych przypomnień.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

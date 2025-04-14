@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatDateTime } from '@/lib/utils';
 import { getSession, getSessionTranscript, getSessionTasks, Session as SessionType } from '@/lib/api/sessionsApi';
+import { sendSessionReminder } from '@/lib/api/remindersApi';
 import { toast } from 'react-toastify';
 
 export default function SessionDetailPage() {
@@ -17,6 +18,7 @@ export default function SessionDetailPage() {
   const [transcript, setTranscript] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSendingReminder, setIsSendingReminder] = useState(false);
   const [activeTab, setActiveTab] = useState('summary');
   const [error, setError] = useState<string | null>(null);
 
@@ -53,6 +55,21 @@ export default function SessionDetailPage() {
       fetchSessionData();
     }
   }, [params.id]);
+
+  const handleSendReminder = async () => {
+    try {
+      if (!session) return;
+
+      setIsSendingReminder(true);
+      await sendSessionReminder(session._id);
+      toast.success('Przypomnienie o sesji zostało wysłane');
+    } catch (err) {
+      console.error('Błąd wysyłania przypomnienia o sesji:', err);
+      toast.error('Nie udało się wysłać przypomnienia o sesji');
+    } finally {
+      setIsSendingReminder(false);
+    }
+  };
 
   const getTherapyMethodLabel = (method) => {
     switch (method) {
@@ -139,6 +156,13 @@ export default function SessionDetailPage() {
             </p>
           </div>
           <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              onClick={handleSendReminder}
+              disabled={isSendingReminder}
+            >
+              {isSendingReminder ? 'Wysyłanie...' : 'Wyślij przypomnienie'}
+            </Button>
             <Link href={`/profile/${session.profile}`}>
               <Button variant="outline">Profil</Button>
             </Link>
