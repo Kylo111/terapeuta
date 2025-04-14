@@ -58,6 +58,7 @@ const llmRoutes = require('./app/routes/llm.routes');
 const taskRoutes = require('./app/routes/task.routes');
 const reminderRoutes = require('./app/routes/reminder.routes');
 const reportRoutes = require('./app/routes/report.routes');
+const exportRoutes = require('./app/routes/export.routes');
 // Tymczasowo wyłączamy importy, które mogą powodować problemy
 // const usersApi = require('./app/api/users_api');
 // const profilesApi = require('./app/api/profiles_api');
@@ -73,6 +74,7 @@ app.use('/api/llm', llmRoutes);
 app.use('/api', taskRoutes);
 app.use('/api', reminderRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/export', exportRoutes);
 // app.use('/api/users', usersApi);
 // app.use('/api/profiles', profilesApi);
 // app.use('/api/therapy', therapyApi);
