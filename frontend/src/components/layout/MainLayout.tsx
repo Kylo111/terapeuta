@@ -11,7 +11,8 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/lib/context/AuthContext';
 import { cn } from '@/lib/utils';
@@ -31,6 +32,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { name: 'Profile', href: '/profile', icon: UserIcon },
     { name: 'Sesje', href: '/sessions', icon: ChatBubbleLeftRightIcon },
     { name: 'Zadania', href: '/tasks', icon: ClipboardDocumentListIcon },
+    { name: 'Raporty', href: '/reports', icon: ChartBarIcon },
     { name: 'Ustawienia', href: '/settings', icon: Cog6ToothIcon },
   ];
 
